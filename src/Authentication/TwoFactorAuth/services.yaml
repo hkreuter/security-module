@@ -5,6 +5,7 @@ services:
 
   OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\ModuleSettingsServiceInterface:
     class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\ModuleSettingsService
+    public: true
 
   OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\OTP\OTPGeneratorServiceInterface:
     class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\OTP\OTPGeneratorService

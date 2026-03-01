@@ -49,4 +49,16 @@ $aLang = [
     'OE_SECURITY_2FA_ERROR_EXPIRED'      => 'Der Bestätigungscode ist abgelaufen.',
     'OE_SECURITY_2FA_ERROR_BLOCKED'      => 'Zu viele Fehlversuche. Bitte versuchen Sie es später erneut.',
     'OE_SECURITY_2FA_ATTEMPTS_REMAINING' => 'Noch %d Versuche übrig.',
+
+    'OE_SECURITY_2FA_ACCOUNT_TITLE'      => 'Zwei-Faktor-Authentifizierung',
+    'OE_SECURITY_2FA_ACCOUNT_MENU'       => 'Zwei-Faktor-Auth',
+    'OE_SECURITY_2FA_ACCOUNT_STATUS'     => 'Aktueller Status',
+    'OE_SECURITY_2FA_GLOBALLY_DISABLED'  => 'Die Zwei-Faktor-Authentifizierung ist derzeit nicht verfügbar.',
+    'OE_SECURITY_2FA_STATUS_CHANGED'     => 'Ihre Zwei-Faktor-Authentifizierungseinstellungen wurden aktualisiert.',
+    'OE_SECURITY_2FA_STATUS_ENABLED'     => 'Aktiviert',
+    'OE_SECURITY_2FA_STATUS_DISABLED'    => 'Deaktiviert',
+    'OE_SECURITY_2FA_ENABLED_INFO'       => 'Bei jeder Anmeldung wird ein Bestätigungscode an Ihre E-Mail-Adresse gesendet.',
+    'OE_SECURITY_2FA_DISABLED_INFO'      => 'Aktivieren Sie die Zwei-Faktor-Authentifizierung, um Ihr Konto zusätzlich zu schützen.',
+    'OE_SECURITY_2FA_ENABLE'             => 'Zwei-Faktor-Auth aktivieren',
+    'OE_SECURITY_2FA_DISABLE'            => 'Zwei-Faktor-Auth deaktivieren',
 ];

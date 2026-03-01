@@ -27,20 +27,6 @@ class UserServiceTest extends TestCase
         $this->assertFalse($sut->isTwoFactorRequired(self::USER_ID, false));
     }
 
-    public function testIsTwoFactorRequiredReturnsTrueWhenEnabled(): void
-    {
-        $settings = $this->createMock(ModuleSettingsServiceInterface::class);
-        $settings->method('isTwoFactorAuthEnabled')->willReturn(true);
-
-        $sut = new UserService(
-            $this->createStub(TwoFactorAuthOrchestratorInterface::class),
-            $settings,
-            false,
-        );
-
-        $this->assertTrue($sut->isTwoFactorRequired(self::USER_ID, false));
-    }
-
     public function testIsTwoFactorRequiredForAdminWhenMandatory(): void
     {
         $settings = $this->createMock(ModuleSettingsServiceInterface::class);

@@ -1,0 +1,93 @@
+{% capture append="oxidBlock_content" %}
+
+    {% set user = oView.getUser() %}
+
+    <h1 class="page-header">
+        {{ translate({ ident: "OE_SECURITY_2FA_ACCOUNT_TITLE" }) }}
+    </h1>
+
+    <div class="container-xxl py-3">
+        {% if not oView.isTwoFactorGloballyEnabled() %}
+            <div class="alert alert-info">
+                {{ translate({ ident: "OE_SECURITY_2FA_GLOBALLY_DISABLED" }) }}
+            </div>
+        {% else %}
+            {% if oView.isStatusChanged() %}
+                <div class="alert alert-success">
+                    {{ translate({ ident: "OE_SECURITY_2FA_STATUS_CHANGED" }) }}
+                </div>
+            {% endif %}
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ translate({
+                            ident: "OE_SECURITY_2FA_ACCOUNT_STATUS"
+                        }) }}
+                    </h5>
+
+                    {% if oView.isTwoFactorEnabled() %}
+                        <p class="text-success fw-bold">
+                            {{ translate({
+                                ident: "OE_SECURITY_2FA_STATUS_ENABLED"
+                            }) }}
+                        </p>
+                        <p>
+                            {{ translate({
+                                ident: "OE_SECURITY_2FA_ENABLED_INFO"
+                            }) }}
+                        </p>
+                        <form action="{{ oViewConf.getSelfLink()|raw }}"
+                              method="post">
+                            {{ oViewConf.getHiddenSid()|raw }}
+                            <input type="hidden" name="cl"
+                                   value="account_twofactorauth">
+                            <input type="hidden" name="fnc"
+                                   value="disableTwoFactorAuth">
+                            <button type="submit"
+                                    class="btn btn-outline-danger">
+                                {{ translate({
+                                    ident: "OE_SECURITY_2FA_DISABLE"
+                                }) }}
+                            </button>
+                        </form>
+                    {% else %}
+                        <p class="text-muted">
+                            {{ translate({
+                                ident: "OE_SECURITY_2FA_STATUS_DISABLED"
+                            }) }}
+                        </p>
+                        <p>
+                            {{ translate({
+                                ident: "OE_SECURITY_2FA_DISABLED_INFO"
+                            }) }}
+                        </p>
+                        <form action="{{ oViewConf.getSelfLink()|raw }}"
+                              method="post">
+                            {{ oViewConf.getHiddenSid()|raw }}
+                            <input type="hidden" name="cl"
+                                   value="account_twofactorauth">
+                            <input type="hidden" name="fnc"
+                                   value="enableTwoFactorAuth">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                {{ translate({
+                                    ident: "OE_SECURITY_2FA_ENABLE"
+                                }) }}
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endcapture %}
+
+{% capture append="oxidBlock_sidebar" %}
+    {% include "page/account/inc/account_menu.html.twig" with {
+        active_link: "twofactorauth"
+    } %}
+{% endcapture %}
+
+{% include "layout/page.html.twig" %}

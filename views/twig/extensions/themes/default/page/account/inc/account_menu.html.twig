@@ -1,0 +1,10 @@
+{% extends 'page/account/inc/account_menu.html.twig' %}
+
+{% block account_menu %}
+    {{ parent() }}
+    <a class="dropdown-item{% if active_link == "twofactorauth" %} active{% endif %}"
+       href="{{ seo_url({ ident: oViewConf.getSslSelfLink() ~ "cl=account_twofactorauth" }) }}"
+       title="{{ translate({ ident: "OE_SECURITY_2FA_ACCOUNT_MENU" }) }}">
+        {{ translate({ ident: "OE_SECURITY_2FA_ACCOUNT_MENU" }) }}
+    </a>
+{% endblock %}

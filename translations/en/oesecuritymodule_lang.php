@@ -49,4 +49,16 @@ $aLang = [
     'OE_SECURITY_2FA_ERROR_EXPIRED'      => 'The verification code has expired.',
     'OE_SECURITY_2FA_ERROR_BLOCKED'      => 'Too many failed attempts. Please try again later.',
     'OE_SECURITY_2FA_ATTEMPTS_REMAINING' => '%d attempts remaining.',
+
+    'OE_SECURITY_2FA_ACCOUNT_TITLE'      => 'Two-Factor Authentication',
+    'OE_SECURITY_2FA_ACCOUNT_MENU'       => 'Two-Factor Auth',
+    'OE_SECURITY_2FA_ACCOUNT_STATUS'     => 'Current Status',
+    'OE_SECURITY_2FA_GLOBALLY_DISABLED'  => 'Two-factor authentication is currently not available.',
+    'OE_SECURITY_2FA_STATUS_CHANGED'     => 'Your two-factor authentication settings have been updated.',
+    'OE_SECURITY_2FA_STATUS_ENABLED'     => 'Enabled',
+    'OE_SECURITY_2FA_STATUS_DISABLED'    => 'Disabled',
+    'OE_SECURITY_2FA_ENABLED_INFO'       => 'A verification code will be sent to your email address each time you log in.',
+    'OE_SECURITY_2FA_DISABLED_INFO'      => 'Enable two-factor authentication to add an extra layer of security to your account.',
+    'OE_SECURITY_2FA_ENABLE'             => 'Enable Two-Factor Auth',
+    'OE_SECURITY_2FA_DISABLE'            => 'Disable Two-Factor Auth',
 ];

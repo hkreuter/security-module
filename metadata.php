@@ -45,6 +45,7 @@ $aModule = [
         'password' => \OxidEsales\SecurityModule\PasswordPolicy\Controller\PasswordAjaxController::class,
         'twofactorauth' => \OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFactorAuthController::class,
         'twofactorauthadmin' => \OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFactorAuthAdminController::class,
+        'account_twofactorauth' => \OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Controller\AccountTwoFactorAuthController::class,
     ],
     'templates'   => [
         'oe_security_2fa_admin.html.twig' => 'views/admin_twig/tpl/oe_security_2fa_admin.html.twig',
