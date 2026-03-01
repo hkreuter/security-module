@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>{{ translate({ ident: "OE_SECURITY_2FA_TITLE" }) }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset={{ charset }}">
+    <link rel="stylesheet" href="{{ oViewConf.getResourceUrl()|raw }}login.css">
+</head>
+<body>
+
+<div class="admin-login-box">
+    <div id="shopLogo">
+        <img src="{{ oViewConf.getImageUrl('logo_dark.svg')|raw }}" />
+    </div>
+
+    <h3>{{ translate({ ident: "OE_SECURITY_2FA_TITLE" }) }}</h3>
+    <p>{{ translate({ ident: "OE_SECURITY_2FA_ENTER_CODE" }) }}</p>
+
+    {% if error is defined and error %}
+        <div class="errorbox">
+            {% if error == 'invalid_code' %}
+                {{ translate({ ident: "OE_SECURITY_2FA_ERROR_INVALID" }) }}
+            {% elseif error == 'blocked' %}
+                {{ translate({ ident: "OE_SECURITY_2FA_ERROR_BLOCKED" }) }}
+            {% endif %}
+            {% if remaining_attempts is defined %}
+                <br />{{ translate({ ident: "OE_SECURITY_2FA_ATTEMPTS_REMAINING", suffix: "COLON", args: [remaining_attempts] }) }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <form action="{{ oViewConf.getSelfLink()|raw }}" target="_top" method="post" name="twofactorauth">
+        {{ oViewConf.getHiddenSid()|raw }}
+        <input type="hidden" name="fnc" value="handleOTP">
+        <input type="hidden" name="cl" value="twofactorauthadmin">
+
+        <div class="form-group">
+            <label for="otp_code">{{ translate({ ident: "OE_SECURITY_2FA_CODE_LABEL" }) }}</label>
+            <input type="text" id="otp_code" name="otp_code"
+                   class="editinput" maxlength="8"
+                   autocomplete="one-time-code" autofocus
+                   pattern="[0-9]*" inputmode="numeric" />
+        </div>
+
+        <input type="submit"
+               value="{{ translate({ ident: "OE_SECURITY_2FA_SUBMIT" }) }}"
+               class="btn">
+    </form>
+</div>
+
+</body>
+</html>

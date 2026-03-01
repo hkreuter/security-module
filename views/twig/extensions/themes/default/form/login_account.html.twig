@@ -4,3 +4,11 @@
     {% include '@oe_security_module/form/captcha.html.twig' %}
 {% endblock %}
 
+{% block account_login_form %}
+    {{ parent() }}
+    {% set oxcmp_user = oView.getComponent("oxcmp_user") %}
+    {% if oxcmp_user and oxcmp_user.isTwoFactorAuthRequired() %}
+        {% include '@oe_security_module/form/twofactorauth_modal.html.twig' %}
+    {% endif %}
+{% endblock %}
+

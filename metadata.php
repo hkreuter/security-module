@@ -9,6 +9,7 @@
  * Metadata version
  */
 
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\ModuleSettingsService as TwoFAModuleSettings;
 use OxidEsales\SecurityModule\PasswordPolicy\Service\ModuleSettingsService as PasswordPolicyModuleSettings;
 use OxidEsales\SecurityModule\Captcha\Service\ModuleSettingsService as CaptchaModuleSettings;
 use OxidEsales\SecurityModule\Core\Module;
@@ -35,13 +36,18 @@ $aModule = [
         \OxidEsales\Eshop\Application\Controller\ForgotPasswordController::class => \OxidEsales\SecurityModule\Captcha\Shop\ForgotPasswordController::class,
         \OxidEsales\Eshop\Application\Model\User::class => \OxidEsales\SecurityModule\Shared\Model\User::class,
         \OxidEsales\Eshop\Core\InputValidator::class    => \OxidEsales\SecurityModule\Shared\Core\InputValidator::class,
-        \OxidEsales\Eshop\Core\ViewConfig::class        => \OxidEsales\SecurityModule\Shared\Core\ViewConfig::class
+        \OxidEsales\Eshop\Core\ViewConfig::class        => \OxidEsales\SecurityModule\Shared\Core\ViewConfig::class,
+        \OxidEsales\Eshop\Application\Component\UserComponent::class => \OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Shared\Component\UserComponent::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\LoginController::class => \OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Shared\Controller\Admin\LoginController::class,
     ],
     'controllers' => [
         'captcha' => \OxidEsales\SecurityModule\Captcha\Controller\CaptchaController::class,
-        'password' => \OxidEsales\SecurityModule\PasswordPolicy\Controller\PasswordAjaxController::class
+        'password' => \OxidEsales\SecurityModule\PasswordPolicy\Controller\PasswordAjaxController::class,
+        'twofactorauth' => \OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFactorAuthController::class,
+        'twofactorauthadmin' => \OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFactorAuthAdminController::class,
     ],
     'templates'   => [
+        'oe_security_2fa_admin.html.twig' => 'views/admin_twig/tpl/oe_security_2fa_admin.html.twig',
     ],
     'events'      => [
     ],
@@ -109,6 +115,44 @@ $aModule = [
             'type'  => 'select',
             'constraints' => '5min|15min|30min',
             'value' => '15min'
+        ],
+
+        //Two-Factor Authentication
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFAModuleSettings::TWO_FACTOR_AUTH_ENABLED,
+            'type'  => 'bool',
+            'value' => false
+        ],
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFAModuleSettings::OTP_LENGTH,
+            'type'  => 'num',
+            'value' => 6
+        ],
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFAModuleSettings::OTP_TTL,
+            'type'  => 'num',
+            'value' => 300
+        ],
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFAModuleSettings::OTP_MAX_ATTEMPTS,
+            'type'  => 'num',
+            'value' => 5
+        ],
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFAModuleSettings::OTP_BLOCK_DURATION,
+            'type'  => 'num',
+            'value' => 300
+        ],
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFAModuleSettings::OTP_RESEND_COOLDOWN,
+            'type'  => 'num',
+            'value' => 60
         ]
     ],
 ];

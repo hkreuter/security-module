@@ -26,4 +26,12 @@ $aLang = [
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_5min'  => '5 min',
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_15min' => '15 min',
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_30min' => '30 min',
+
+    'SHOP_MODULE_GROUP_two_factor_auth'              => 'Two-Factor Authentication',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthEnabled'     => 'Enable Two-Factor Authentication',
+    'SHOP_MODULE_oeSecurityOtpLength'                => 'OTP Code Length',
+    'SHOP_MODULE_oeSecurityOtpTtl'                   => 'OTP Validity (seconds)',
+    'SHOP_MODULE_oeSecurityOtpMaxAttempts'            => 'Maximum Attempts',
+    'SHOP_MODULE_oeSecurityOtpBlockDuration'          => 'Block Duration (seconds)',
+    'SHOP_MODULE_oeSecurityOtpResendCooldown'         => 'Resend Cooldown (seconds)',
 ];

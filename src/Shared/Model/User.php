@@ -12,6 +12,8 @@ namespace OxidEsales\SecurityModule\Shared\Model;
 use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Exception\UserException;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\TwoFactorAuthRequiredException;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\UserServiceInterface;
 use OxidEsales\SecurityModule\Captcha\Captcha\Image\Exception\CaptchaValidateException as ImageCaptchaException;
 use OxidEsales\SecurityModule\Captcha\Captcha\HoneyPot\Exception\CaptchaValidateException as HoneyPotCaptchaException;
 use OxidEsales\SecurityModule\Captcha\Service\CaptchaServiceInterface;
@@ -75,6 +77,23 @@ class User extends User_parent
         }
 
         return parent::login($userName, $password, $setSessionCookie);
+    }
+
+    protected function onLogin($userName, $password)
+    {
+        parent::onLogin($userName, $password);
+
+        $userService = $this->getService(UserServiceInterface::class);
+        $userId = $this->getId();
+        $isAdmin = $this->isAdmin();
+        $context = $isAdmin ? 'admin' : 'frontend';
+
+        if ($userService->isTwoFactorRequired($userId, $isAdmin)) {
+            $sid = Registry::getSession()->getId();
+            $userService->initiateTwoFactor($userId, $sid, $context);
+
+            throw new TwoFactorAuthRequiredException($userId, $context);
+        }
     }
 
     private function isCaptchaEnabled(): bool

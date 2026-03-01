@@ -38,5 +38,15 @@ $aLang = [
     'ERROR_PASSWORD_STRENGTH_3' => "Strong",
     'ERROR_PASSWORD_STRENGTH_4' => "Very strong",
 
-    'GENERATE_STRONG_PASSWORD' => 'Generate Strong Password'
+    'GENERATE_STRONG_PASSWORD' => 'Generate Strong Password',
+
+    'OE_SECURITY_2FA_TITLE'              => 'Two-Factor Authentication',
+    'OE_SECURITY_2FA_ENTER_CODE'         => 'Enter the verification code sent to your email.',
+    'OE_SECURITY_2FA_CODE_LABEL'         => 'Verification Code',
+    'OE_SECURITY_2FA_SUBMIT'             => 'Verify',
+    'OE_SECURITY_2FA_RESEND'             => 'Resend Code',
+    'OE_SECURITY_2FA_ERROR_INVALID'      => 'Invalid verification code.',
+    'OE_SECURITY_2FA_ERROR_EXPIRED'      => 'The verification code has expired.',
+    'OE_SECURITY_2FA_ERROR_BLOCKED'      => 'Too many failed attempts. Please try again later.',
+    'OE_SECURITY_2FA_ATTEMPTS_REMAINING' => '%d attempts remaining.',
 ];

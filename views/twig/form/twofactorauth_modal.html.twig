@@ -1,0 +1,83 @@
+<div id="oe-security-2fa-modal" class="modal fade show" tabindex="-1" role="dialog" style="display:block;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ translate({ ident: "OE_SECURITY_2FA_TITLE" }) }}</h5>
+            </div>
+            <div class="modal-body">
+                <p>{{ translate({ ident: "OE_SECURITY_2FA_ENTER_CODE" }) }}</p>
+                <div id="oe-security-2fa-error" class="alert alert-danger" style="display:none;"></div>
+                <form id="oe-security-2fa-form"
+                      data-url="{{ oViewConf.getSelfLink() }}"
+                      data-stoken="{{ oViewConf.getSessionChallengeToken() }}">
+                    <div class="form-group">
+                        <label for="otp_code">{{ translate({ ident: "OE_SECURITY_2FA_CODE_LABEL" }) }}</label>
+                        <input type="text" id="otp_code" name="otp_code"
+                               class="form-control" maxlength="8"
+                               autocomplete="one-time-code" autofocus
+                               pattern="[0-9]*" inputmode="numeric" />
+                    </div>
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            {{ translate({ ident: "OE_SECURITY_2FA_SUBMIT" }) }}
+                        </button>
+                        <button type="button" id="oe-security-2fa-resend" class="btn btn-link">
+                            {{ translate({ ident: "OE_SECURITY_2FA_RESEND" }) }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+</div>
+
+<script>
+(function() {
+    var form = document.getElementById('oe-security-2fa-form');
+    var errorDiv = document.getElementById('oe-security-2fa-error');
+    var resendBtn = document.getElementById('oe-security-2fa-resend');
+    var baseUrl = form.dataset.url;
+    var stoken = form.dataset.stoken;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var code = document.getElementById('otp_code').value;
+
+        fetch(baseUrl + '&cl=twofactorauth&fnc=handleOTP&stoken=' + stoken, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'otp_code=' + encodeURIComponent(code) + '&stoken=' + encodeURIComponent(stoken)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                errorDiv.style.display = 'block';
+                if (data.error === 'blocked') {
+                    errorDiv.textContent = '{{ translate({ ident: "OE_SECURITY_2FA_ERROR_BLOCKED" }) }}';
+                } else {
+                    errorDiv.textContent = '{{ translate({ ident: "OE_SECURITY_2FA_ERROR_INVALID" }) }}';
+                }
+            }
+        });
+    });
+
+    resendBtn.addEventListener('click', function() {
+        fetch(baseUrl + '&cl=twofactorauth&fnc=resendOTP&stoken=' + stoken, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'stoken=' + encodeURIComponent(stoken)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                errorDiv.style.display = 'block';
+                errorDiv.className = 'alert alert-success';
+                errorDiv.textContent = 'Code sent.';
+            }
+        });
+    });
+})();
+</script>

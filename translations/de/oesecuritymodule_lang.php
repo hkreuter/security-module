@@ -38,5 +38,15 @@ $aLang = [
     'ERROR_PASSWORD_STRENGTH_3' => "Stark",
     'ERROR_PASSWORD_STRENGTH_4' => "Sehr Stark",
 
-    'GENERATE_STRONG_PASSWORD' => 'Starkes Passwort generieren'
+    'GENERATE_STRONG_PASSWORD' => 'Starkes Passwort generieren',
+
+    'OE_SECURITY_2FA_TITLE'              => 'Zwei-Faktor-Authentifizierung',
+    'OE_SECURITY_2FA_ENTER_CODE'         => 'Geben Sie den Bestätigungscode ein, der an Ihre E-Mail gesendet wurde.',
+    'OE_SECURITY_2FA_CODE_LABEL'         => 'Bestätigungscode',
+    'OE_SECURITY_2FA_SUBMIT'             => 'Bestätigen',
+    'OE_SECURITY_2FA_RESEND'             => 'Code erneut senden',
+    'OE_SECURITY_2FA_ERROR_INVALID'      => 'Ungültiger Bestätigungscode.',
+    'OE_SECURITY_2FA_ERROR_EXPIRED'      => 'Der Bestätigungscode ist abgelaufen.',
+    'OE_SECURITY_2FA_ERROR_BLOCKED'      => 'Zu viele Fehlversuche. Bitte versuchen Sie es später erneut.',
+    'OE_SECURITY_2FA_ATTEMPTS_REMAINING' => 'Noch %d Versuche übrig.',
 ];
