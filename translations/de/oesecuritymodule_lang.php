@@ -38,5 +38,7 @@ $aLang = [
     'ERROR_PASSWORD_STRENGTH_3' => "Stark",
     'ERROR_PASSWORD_STRENGTH_4' => "Sehr Stark",
 
-    'GENERATE_STRONG_PASSWORD' => 'Starkes Passwort generieren'
+    'GENERATE_STRONG_PASSWORD' => 'Starkes Passwort generieren',
+
+    'OE_SECURITY_2FA_EMAIL_SUBJECT'  => 'Ihr Bestätigungscode',
 ];

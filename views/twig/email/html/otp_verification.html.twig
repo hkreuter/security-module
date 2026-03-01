@@ -1,0 +1,21 @@
+{% set shop = oEmailView.getShop() %}
+{% set oViewConf = oEmailView.getViewConfig() %}
+
+{% include "email/html/header.html.twig" with {title: translate({ ident: "OE_SECURITY_2FA_EMAIL_SUBJECT" })} %}
+
+<table class="row">
+    <tr>
+        <td class="wrapper last">
+            <table class="twelve columns">
+                <tr>
+                    <td class="text-pad">
+                        {% include_content 'oesm2faotpemail' with {otpCode: otpCode, lifetimeMinutes: lifetimeMinutes} %}
+                    </td>
+                    <td class="expander"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+{% include "email/html/footer.html.twig" %}
