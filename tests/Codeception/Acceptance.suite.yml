@@ -46,8 +46,14 @@ modules:
         shop_path: '%SHOP_SOURCE_PATH%'
         paths:
           - 'Application/views/%THEME_ID%'
-          - 'Application/views/admin_twig'
           - '%SOURCE_RELATIVE_PACKAGE_PATH%/translations'
+        paths_admin:
+          - 'Application/views/admin_twig'
+          - '%SOURCE_RELATIVE_PACKAGE_PATH%/views/admin_twig'
+    - \OxidEsales\Codeception\Module\OxideshopAdmin:
+        depends:
+          - WebDriver
+          - \OxidEsales\Codeception\Module\Oxideshop
     - \OxidEsales\Codeception\Module\OxideshopModules
 step_decorators:
     - \Codeception\Step\Retry

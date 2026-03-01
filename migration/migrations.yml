@@ -1,5 +1,4 @@
-table_prefix: oxmigrations_
-migrations_namespace: OxidEsales\SecurityModule\Migrations
-migrations_directory: data
+table_storage:
+  table_name: oxmigrations_oe_security_module
 migrations_paths:
-    'OxidEsales\SecurityModule\Migrations': data
+  'OxidEsales\SecurityModule\Migrations': data

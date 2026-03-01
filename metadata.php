@@ -11,6 +11,7 @@
 
 use OxidEsales\SecurityModule\PasswordPolicy\Service\ModuleSettingsService as PasswordPolicyModuleSettings;
 use OxidEsales\SecurityModule\Captcha\Service\ModuleSettingsService as CaptchaModuleSettings;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\ModuleSettingsService as TwoFactorAuthModuleSettings;
 use OxidEsales\SecurityModule\Core\Module;
 
 $sMetadataVersion = '2.1';
@@ -109,6 +110,38 @@ $aModule = [
             'type'  => 'select',
             'constraints' => '5min|15min|30min',
             'value' => '15min'
+        ],
+
+        //Two-Factor Authentication
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFactorAuthModuleSettings::TWO_FACTOR_AUTH_ENABLE,
+            'type'  => 'bool',
+            'value' => false
+        ],
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFactorAuthModuleSettings::OTP_LENGTH,
+            'type'  => 'num',
+            'value' => 6
+        ],
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFactorAuthModuleSettings::OTP_LIFETIME,
+            'type'  => 'num',
+            'value' => 300
+        ],
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFactorAuthModuleSettings::MAX_ATTEMPTS,
+            'type'  => 'num',
+            'value' => 3
+        ],
+        [
+            'group' => 'two_factor_auth',
+            'name'  => TwoFactorAuthModuleSettings::COOLDOWN,
+            'type'  => 'num',
+            'value' => 60
         ]
     ],
 ];

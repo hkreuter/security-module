@@ -26,4 +26,16 @@ $aLang = [
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_5min'  => '5 min',
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_15min' => '15 min',
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_30min' => '30 min',
+
+    'SHOP_MODULE_GROUP_two_factor_auth'                       => 'Two-Factor Authentication (2FA)',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthEnable'               => 'Enable Two-Factor Authentication',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthEnable'          => 'When enabled, users will receive an email with a one-time code during login.',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthOtpLength'            => 'OTP code length',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthOtpLength'       => 'Number of digits for the one-time code (default: 6).',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthOtpLifetime'          => 'OTP lifetime (seconds)',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthOtpLifetime'     => 'How long the one-time code remains valid in seconds (default: 300).',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthMaxAttempts'           => 'Max verification attempts',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthMaxAttempts'      => 'Maximum number of failed attempts before the code is invalidated (default: 3).',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthCooldown'             => 'Resend cooldown (seconds)',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthCooldown'        => 'Minimum time in seconds before a new code can be sent (default: 60).',
 ];
