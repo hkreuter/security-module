@@ -1,0 +1,5 @@
+table_prefix: oxmigrations_
+migrations_namespace: OxidEsales\SecurityModule\Migrations
+migrations_directory: data
+migrations_paths:
+    'OxidEsales\SecurityModule\Migrations': data
