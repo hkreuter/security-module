@@ -1,4 +1,5 @@
 imports:
+  - { resource: src/Authentication/services.yaml }
   - { resource: src/Captcha/services.yaml }
   - { resource: src/PasswordPolicy/services.yaml }
 
