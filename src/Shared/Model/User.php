@@ -12,6 +12,8 @@ namespace OxidEsales\SecurityModule\Shared\Model;
 use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Exception\UserException;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\TwoFactorAuthRequiredException;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\ModuleSettingsServiceInterface as TwoFactorAuthSettingsInterface;
 use OxidEsales\SecurityModule\Captcha\Captcha\Image\Exception\CaptchaValidateException as ImageCaptchaException;
 use OxidEsales\SecurityModule\Captcha\Captcha\HoneyPot\Exception\CaptchaValidateException as HoneyPotCaptchaException;
 use OxidEsales\SecurityModule\Captcha\Service\CaptchaServiceInterface;
@@ -24,7 +26,7 @@ use OxidEsales\SecurityModule\Shared\Core\InputValidator;
  * @mixin \OxidEsales\Eshop\Application\Model\User
  * @eshopExtension
  */
-class User extends User_parent
+class User extends User_parent implements User2FAInterface
 {
     public function checkValues($sLogin, $sPassword, $sPassword2, $aInvAddress, $aDelAddress): void
     {
@@ -86,5 +88,36 @@ class User extends User_parent
     protected function shouldValidateCaptcha(): bool
     {
         return !$this->getUser();
+    }
+
+    public function is2FAEnabled(): bool
+    {
+        return (bool) $this->getFieldData('oesm2faenabled');
+    }
+
+    public function set2FAEnabled(bool $enabled): void
+    {
+        $this->assign(['oesm2faenabled' => $enabled ? 1 : 0]);
+    }
+
+    protected function onLogin($userName, $password)
+    {
+        parent::onLogin($userName, $password);
+
+        if (!$this->isLoaded()) {
+            return;
+        }
+
+        $settings = $this->getService(TwoFactorAuthSettingsInterface::class);
+
+        if (!$settings->isTwoFactorAuthEnabled()) {
+            return;
+        }
+
+        if (!$this->is2FAEnabled()) {
+            return;
+        }
+
+        throw new TwoFactorAuthRequiredException($this->getId());
     }
 }
