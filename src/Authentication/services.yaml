@@ -30,3 +30,10 @@ services:
 
   OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Provider\Email\EmailAdapterInterface:
     class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Provider\Email\EmailAdapter
+
+  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFactorAuthOrchestratorInterface:
+    class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFactorAuthOrchestrator
+
+  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\UserServiceInterface:
+    class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\UserService
+    public: true

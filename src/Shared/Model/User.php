@@ -13,7 +13,7 @@ use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Exception\UserException;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\TwoFactorAuthRequiredException;
-use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\ModuleSettingsServiceInterface as TwoFactorAuthSettingsInterface;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\UserServiceInterface as TwoFactorAuthUserServiceInterface;
 use OxidEsales\SecurityModule\Captcha\Captcha\Image\Exception\CaptchaValidateException as ImageCaptchaException;
 use OxidEsales\SecurityModule\Captcha\Captcha\HoneyPot\Exception\CaptchaValidateException as HoneyPotCaptchaException;
 use OxidEsales\SecurityModule\Captcha\Service\CaptchaServiceInterface;
@@ -108,16 +108,10 @@ class User extends User_parent implements User2FAInterface
             return;
         }
 
-        $settings = $this->getService(TwoFactorAuthSettingsInterface::class);
+        $userService = $this->getService(TwoFactorAuthUserServiceInterface::class);
 
-        if (!$settings->isTwoFactorAuthEnabled()) {
-            return;
+        if ($userService->requiresTwoFactorAuth($this)) {
+            throw new TwoFactorAuthRequiredException($this->getId());
         }
-
-        if (!$this->is2FAEnabled()) {
-            return;
-        }
-
-        throw new TwoFactorAuthRequiredException($this->getId());
     }
 }
