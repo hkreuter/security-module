@@ -33,6 +33,7 @@ services:
 
   OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFactorAuthOrchestratorInterface:
     class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFactorAuthOrchestrator
+    public: true
 
   OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\UserServiceInterface:
     class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\UserService

@@ -36,6 +36,7 @@ $aModule = [
         \OxidEsales\Eshop\Application\Controller\ForgotPasswordController::class => \OxidEsales\SecurityModule\Captcha\Shop\ForgotPasswordController::class,
         \OxidEsales\Eshop\Application\Model\User::class => \OxidEsales\SecurityModule\Shared\Model\User::class,
         \OxidEsales\Eshop\Core\InputValidator::class    => \OxidEsales\SecurityModule\Shared\Core\InputValidator::class,
+        \OxidEsales\Eshop\Application\Component\UserComponent::class => \OxidEsales\SecurityModule\Shared\Component\UserComponent::class,
         \OxidEsales\Eshop\Core\ViewConfig::class        => \OxidEsales\SecurityModule\Shared\Core\ViewConfig::class
     ],
     'controllers' => [
