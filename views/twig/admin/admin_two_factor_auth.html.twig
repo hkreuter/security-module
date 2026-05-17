@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>{{ translate({ ident: "OE_SECURITY_ADMIN_TWO_FACTOR_TITLE" }) }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset={{ charset }}">
+    <meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+    <link rel="shortcut icon" href="{{ oViewConf.getImageUrl()|raw }}favicon.ico">
+    <link rel="stylesheet" href="{{ oViewConf.getResourceUrl()|raw }}login.css">
+    <link rel="stylesheet" href="{{ oViewConf.getResourceUrl()|raw }}colors_{{ oViewConf.getEdition()|lower }}.css">
+</head>
+<body>
+
+{% if Errors.default is not empty %}
+    {% include "inc_error.html.twig" with {Errorlist: Errors.default} %}
+{% endif %}
+
+<div class="admin-login-box">
+
+    <div id="shopLogo"><img src="{{ oViewConf.getImageUrl('logo_dark.svg')|raw }}" /></div>
+
+    <p>{{ translate({ ident: "OE_SECURITY_ADMIN_TWO_FACTOR_DESCRIPTION" }) }}</p>
+
+    {% if resendable and remainingAttempts <= 0 %}
+
+        {# No attempts left — only offer re-login #}
+        <form action="{{ oViewConf.getSelfLink()|raw }}" method="post" name="admin_2fa_abandon">
+            {{ oViewConf.getHiddenSid()|raw }}
+            <input type="hidden" name="cl" value="oesm_admin_twofactorauth">
+            <input type="hidden" name="fnc" value="abandonChallenge">
+            <input type="submit" value="{{ translate({ ident: "OE_SECURITY_LOG_IN_AGAIN" }) }}" class="btn">
+        </form>
+
+    {% else %}
+
+        <form action="{{ oViewConf.getSelfLink()|raw }}" method="post" name="admin_2fa_verify">
+            {{ oViewConf.getHiddenSid()|raw }}
+            <input type="hidden" name="cl" value="oesm_admin_twofactorauth">
+            <input type="hidden" name="fnc" value="verifyCode">
+
+            <label for="auth_code">{{ translate({ ident: "OE_SECURITY_ENTER_CODE" }) }}</label>
+            <input
+                type="text"
+                id="auth_code"
+                name="auth_code"
+                value=""
+                size="20"
+                maxlength="6"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                autofocus
+            ><br>
+
+            {% if resendable %}
+                <small id="remaining-attempts-label">
+                    {{ translate({ ident: "OE_SECURITY_REMAINING_ATTEMPTS" }) }}:
+                    <strong id="remaining-attempts">{{ remainingAttempts }}</strong>
+                </small><br>
+
+                <button
+                    id="resend-btn"
+                    type="button"
+                    data-cooldown-remaining="{{ resendCooldownRemaining }}"
+                    data-resend-url="/api/admin-2fa/resend"
+                    data-text-default="{{ translate({ ident: "RESEND_CODE" }) }}"
+                    data-text-sending="{{ translate({ ident: "RESEND_CODE_SENDING" }) }}"
+                    data-text-error="{{ translate({ ident: "RESEND_CODE_ERROR" }) }}"
+                    data-text-countdown="{{ translate({ ident: "RESEND_CODE_COUNTDOWN" }) }}"
+                >{{ translate({ ident: "RESEND_CODE" }) }}</button><br>
+                <span id="resend-hint" aria-live="polite"></span><br>
+            {% endif %}
+
+            <input type="submit" value="{{ translate({ ident: "OE_SECURITY_VERIFY" }) }}" class="btn"><br>
+        </form>
+
+        <form action="{{ oViewConf.getSelfLink()|raw }}" method="post" name="admin_2fa_abandon">
+            {{ oViewConf.getHiddenSid()|raw }}
+            <input type="hidden" name="cl" value="oesm_admin_twofactorauth">
+            <input type="hidden" name="fnc" value="abandonChallenge">
+            <input type="submit" value="{{ translate({ ident: "OE_SECURITY_LOG_IN_AGAIN" }) }}" class="btn btn-link">
+        </form>
+
+    {% endif %}
+</div>
+
+{% if resendable %}
+<script type="text/javascript">
+(function () {
+    'use strict';
+
+    var btn = document.getElementById('resend-btn');
+    if (!btn) return;
+
+    var cooldown = parseInt(btn.getAttribute('data-cooldown-remaining') || '0', 10);
+    var timer = null;
+
+    function startCountdown(seconds) {
+        if (timer) clearInterval(timer);
+        btn.disabled = true;
+        btn.textContent = btn.getAttribute('data-text-countdown').replace('%d', seconds);
+
+        timer = setInterval(function () {
+            seconds -= 1;
+            if (seconds <= 0) {
+                clearInterval(timer);
+                btn.disabled = false;
+                btn.textContent = btn.getAttribute('data-text-default');
+            } else {
+                btn.textContent = btn.getAttribute('data-text-countdown').replace('%d', seconds);
+            }
+        }, 1000);
+    }
+
+    if (cooldown > 0) {
+        startCountdown(cooldown);
+    }
+
+    btn.addEventListener('click', function () {
+        btn.disabled = true;
+        btn.textContent = btn.getAttribute('data-text-sending');
+
+        fetch(btn.getAttribute('data-resend-url'), { method: 'POST' })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var hint = document.getElementById('resend-hint');
+                if (data.success) {
+                    var attemptsEl = document.getElementById('remaining-attempts');
+                    if (attemptsEl && data.remainingAttempts !== undefined) {
+                        attemptsEl.textContent = data.remainingAttempts;
+                    }
+                    startCountdown(data.cooldownRemaining || 60);
+                    if (hint) hint.textContent = '';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = btn.getAttribute('data-text-default');
+                    if (data.cooldownRemaining) {
+                        startCountdown(data.cooldownRemaining);
+                    } else if (hint) {
+                        hint.textContent = btn.getAttribute('data-text-error');
+                    }
+                }
+            })
+            .catch(function () {
+                btn.disabled = false;
+                btn.textContent = btn.getAttribute('data-text-error');
+            });
+    });
+}());
+</script>
+{% endif %}
+
+<script type="text/javascript">if (window != window.top) top.location.href = document.location.href;</script>
+
+</body>
+</html>

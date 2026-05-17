@@ -18,6 +18,7 @@ use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Service\OtpCodeGe
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Service\OtpCodeValidatorServiceInterface;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\DTO\OtpChallengeStateInterface;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Service\OtpSendPolicyServiceInterface;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\AttemptLimitExceededException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\ResendCooldownException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\InvalidCodeException;
 use PHPUnit\Framework\Attributes\Test;
@@ -205,6 +206,34 @@ class OtpFacadeTest extends TestCase
     }
 
     #[Test]
+    public function resendThrowsAttemptLimitExceededWhenLockedOut(): void
+    {
+        $userId = uniqid();
+
+        $sendPolicyStub = $this->createStub(OtpSendPolicyServiceInterface::class);
+        $sendPolicyStub->method('canSend')->willReturn(true);
+
+        $stateStub = $this->createStub(OtpChallengeStateInterface::class);
+        $stateStub->method('getAttempts')->willReturn(5);
+
+        $stateServiceStub = $this->createStub(OtpChallengeStateServiceInterface::class);
+        $stateServiceStub->method('getChallengeState')->willReturn($stateStub);
+
+        $codeValidatorStub = $this->createStub(OtpCodeValidatorServiceInterface::class);
+        $codeValidatorStub->method('getMaxAttempts')->willReturn(5);
+
+        $sut = $this->getSut(
+            stateService: $stateServiceStub,
+            codeValidator: $codeValidatorStub,
+            sendPolicy: $sendPolicyStub,
+        );
+
+        $this->expectException(AttemptLimitExceededException::class);
+
+        $sut->resend(userId: $userId);
+    }
+
+    #[Test]
     public function resendThrowsCooldownExceptionWhenSendNotAllowed(): void
     {
         $sendPolicyMock = $this->createMock(OtpSendPolicyServiceInterface::class);
@@ -231,10 +260,17 @@ class OtpFacadeTest extends TestCase
         $codeGeneratorStub->method('generateCode')
             ->willReturn($code = uniqid());
 
+        $stateStub = $this->createStub(OtpChallengeStateInterface::class);
+        $stateStub->method('getAttempts')->willReturn(2);
+
         $stateServiceSpy = $this->createMock(OtpChallengeStateServiceInterface::class);
+        $stateServiceSpy->method('getChallengeState')->willReturn($stateStub);
         $stateServiceSpy->expects($this->once())
             ->method('refreshChallengeState')
             ->with($userId, $code);
+
+        $codeValidatorStub = $this->createStub(OtpCodeValidatorServiceInterface::class);
+        $codeValidatorStub->method('getMaxAttempts')->willReturn(5);
 
         $notifierSpy = $this->createMock(OtpNotifierInterface::class);
         $notifierSpy->expects($this->once())
@@ -246,6 +282,7 @@ class OtpFacadeTest extends TestCase
 
         $sut = $this->getSut(
             stateService: $stateServiceSpy,
+            codeValidator: $codeValidatorStub,
             codeGenerator: $codeGeneratorStub,
             notifierFactory: $notifierFactoryStub,
             sendPolicy: $sendPolicyMock,

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.0] - Unreleased
 
+### Added
+- Two-Factor Authentication (2FA) for admin login with email OTP verification
+- Admin 2FA can be enabled via DI parameter `oe_security.admin_2fa_enabled`
+
 ### Changed
 - Updated to work with OXID eShop 7.5.x
 - Minimum PHP version is now 8.3, tested with up to PHP 8.5

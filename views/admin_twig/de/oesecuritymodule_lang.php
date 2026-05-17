@@ -33,4 +33,25 @@ $aLang = [
     'SHOP_MODULE_oeSecurityTwoFactorAuthType_otp'  => 'OTP',
     'SHOP_MODULE_oeSecurityTwoFactorAuthType_totp' => 'TOTP',
     'SHOP_MODULE_oeSecurityTwoFactorAuthType_both' => 'OTP und TOTP',
+
+    // OTP-E-Mail — wird verwendet, wenn der Notifier im Admin-Kontext läuft
+    'OTP_EMAIL_SUBJECT' => 'Ihr Verifizierungscode',
+    'OTP_EMAIL_BODY'    => 'Ihr Verifizierungscode lautet: %s',
+
+    // Admin 2FA OTP-Formular
+    'OE_SECURITY_ADMIN_TWO_FACTOR_TITLE'       => 'Zwei-Faktor-Authentifizierung',
+    'OE_SECURITY_ADMIN_TWO_FACTOR_DESCRIPTION' => 'Ein Bestätigungscode wurde an Ihre E-Mail-Adresse gesendet. Bitte geben Sie ihn unten ein.',
+    'OE_SECURITY_ENTER_CODE'                   => 'Bestätigungscode',
+    'OE_SECURITY_VERIFY'                       => 'Bestätigen',
+    'OE_SECURITY_LOG_IN_AGAIN'                 => 'Erneut anmelden',
+    'OE_SECURITY_REMAINING_ATTEMPTS'           => 'Verbleibende Versuche',
+
+    'RESEND_CODE'           => 'Code erneut senden',
+    'RESEND_CODE_SENDING'   => 'Wird gesendet…',
+    'RESEND_CODE_ERROR'     => 'Code konnte nicht erneut gesendet werden.',
+    'RESEND_CODE_COUNTDOWN' => 'Erneut senden in %ds',
+
+    'ERROR_INVALID_CODE'           => 'Der Bestätigungscode ist ungültig. Bitte versuchen Sie es erneut.',
+    'ERROR_CODE_TIME_EXPIRED'      => 'Der Bestätigungscode ist abgelaufen. Bitte fordern Sie einen neuen Code an.',
+    'ERROR_ATTEMPT_LIMIT_EXCEEDED' => 'Zu viele fehlgeschlagene Versuche. Bitte melden Sie sich erneut an.',
 ];

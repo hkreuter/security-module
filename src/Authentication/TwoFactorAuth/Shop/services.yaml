@@ -8,12 +8,12 @@ services:
       OxidEsales\Eshop\Core\UtilsServer: '@=service("OxidEsales\\SecurityModule\\Core\\Registry").getUtilsServer()'
       OxidEsales\Eshop\Core\Config: '@=service("OxidEsales\\SecurityModule\\Core\\Registry").getConfig()'
 
-  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Controller\TwoFactorAuthController:
+  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Shop\Controller\TwoFactorAuthController:
     public: true
     tags:
         - { name: 'oxid.view_controller', controller_key: 'oesm_twofactorauth' }
 
-  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Controller\AccountSecurityController:
+  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Shop\Controller\AccountSecurityController:
     public: true
     tags:
         - { name: 'oxid.view_controller', controller_key: 'oesm_account_security' }

@@ -7,12 +7,13 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Unit\Authentication\TwoFactorAuth\Controller;
+namespace OxidEsales\SecurityModule\Tests\Unit\Authentication\TwoFactorAuth\Shop\Controller;
 
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Utils;
 use OxidEsales\Eshop\Core\UtilsView;
-use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Controller\TwoFactorAuthController;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Shop\Controller\TwoFactorAuthController;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\AttemptLimitExceededException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\InvalidCodeException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\ResendCooldownException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\SessionExpiredException;
@@ -144,6 +145,34 @@ class TwoFactorAuthControllerTest extends TestCase
             ->method('resend')
             ->with($userId)
             ->willThrowException(new ResendCooldownException());
+
+        $jsonResponseSpy = $this->createMock(JsonResponseInterface::class);
+        $jsonResponseSpy->expects($this->once())
+            ->method('send')
+            ->with(['success' => false], 429);
+
+        $this->getSut(
+            twoFAService: $twoFAServiceSpy,
+            twoFAUserService: $twoFAUserServiceStub,
+            jsonResponse: $jsonResponseSpy,
+        )->resendCode();
+    }
+
+    #[Test]
+    public function resendCodeSends429OnAttemptLimitExceeded(): void
+    {
+        $twoFAUserServiceStub = $this->createStub(TwoFAUserServiceInterface::class);
+        $twoFAUserServiceStub->method('getPendingUserId')
+            ->willReturn($userId = uniqid());
+
+        $twoFAServiceSpy = $this->createMockForIntersectionOfInterfaces([
+            TwoFAServiceInterface::class,
+            TwoFAResendableInterface::class,
+        ]);
+        $twoFAServiceSpy->expects($this->once())
+            ->method('resend')
+            ->with($userId)
+            ->willThrowException(new AttemptLimitExceededException());
 
         $jsonResponseSpy = $this->createMock(JsonResponseInterface::class);
         $jsonResponseSpy->expects($this->once())

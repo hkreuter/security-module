@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Controller;
+namespace OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Shop\Controller;
 
 use OxidEsales\Eshop\Application\Controller\AccountController;
 use OxidEsales\Eshop\Core\UtilsServer;

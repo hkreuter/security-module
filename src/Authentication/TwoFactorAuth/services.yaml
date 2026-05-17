@@ -2,7 +2,8 @@ imports:
   - { resource: Infrastructure/services.yaml }
   - { resource: Service/services.yaml }
   - { resource: Transput/services.yaml }
-  - { resource: Controller/services.yaml }
+  - { resource: Shop/services.yaml }
   - { resource: Factory/services.yaml }
   - { resource: Settings/services.yaml }
   - { resource: OTP/services.yaml }
+  - { resource: Admin/services.yaml }

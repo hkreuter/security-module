@@ -87,10 +87,37 @@ A honeypot captcha is also implemented as a hidden field to detect and block bot
 The module provides Two-Factor Authentication using email-based One-Time Password (OTP) verification.
 When enabled, users are required to enter a verification code sent to their email address after logging in with their credentials.
 
-#### Configuration
+#### Frontend configuration
 
 - Enable/Disable Two-Factor Authentication
 - Verification type (currently supports OTP)
+
+#### Admin 2FA
+
+Admin login can be protected with mandatory OTP verification independently of the frontend setting.
+This is controlled via a DI parameter and is **disabled by default** to prevent accidental lockout.
+
+**Option 1 — Environment variable** (recommended for container deployments):
+
+```shell
+OE_SECURITY_ADMIN_2FA_ENABLED=1
+```
+
+**Option 2 — DI parameter** (project-level `<shop-root>/var/configuration/configurable_services.yaml`):
+
+```yaml
+parameters:
+  oe_security.admin_2fa_enabled: true
+```
+
+Either way, clear the container cache afterwards:
+
+```shell
+composer oe:container:reset
+```
+
+When enabled, every admin login requires OTP verification via a code sent to the admin's email address.
+The feature can be disabled again by setting the parameter back to `false` and clearing the cache.
 
 ### Running the tests and quality tools
 

@@ -9,6 +9,8 @@
  * Metadata version
  */
 
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Admin\Controller\AdminLoginController;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Admin\Controller\AdminTwoFactorAuthController;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettings as TwoFactorAuthModuleSettings;
 use OxidEsales\SecurityModule\PasswordPolicy\Service\ModuleSettingsService as PasswordPolicyModuleSettings;
 use OxidEsales\SecurityModule\Captcha\Service\ModuleSettingsService as CaptchaModuleSettings;
@@ -37,11 +39,12 @@ $aModule = [
         \OxidEsales\Eshop\Application\Controller\ForgotPasswordController::class => \OxidEsales\SecurityModule\Shared\Controller\ForgotPasswordController::class,
         \OxidEsales\Eshop\Application\Model\User::class => \OxidEsales\SecurityModule\Shared\Model\User::class,
         \OxidEsales\Eshop\Core\InputValidator::class    => \OxidEsales\SecurityModule\Shared\Core\InputValidator::class,
-        \OxidEsales\Eshop\Core\ViewConfig::class        => \OxidEsales\SecurityModule\Shared\Core\ViewConfig::class
+        \OxidEsales\Eshop\Core\ViewConfig::class        => \OxidEsales\SecurityModule\Shared\Core\ViewConfig::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\LoginController::class => AdminLoginController::class,
     ],
     'controllers' => [
         'captcha' => \OxidEsales\SecurityModule\Captcha\Controller\CaptchaController::class,
-        'password' => \OxidEsales\SecurityModule\PasswordPolicy\Controller\PasswordAjaxController::class,
+        'password' => \OxidEsales\SecurityModule\PasswordPolicy\Controller\PasswordAjaxController::class
     ],
     'templates'   => [
     ],

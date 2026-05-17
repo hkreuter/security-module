@@ -7,12 +7,13 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Controller;
+namespace OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Shop\Controller;
 
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Utils;
 use OxidEsales\Eshop\Core\UtilsView;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\AttemptLimitExceededException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\CodeValidationException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\ResendCooldownException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\SessionExpiredException;
@@ -113,7 +114,7 @@ class TwoFactorAuthController extends FrontendController
                 'success' => true,
                 'remainingAttempts' => $this->twoFAService->getRemainingAttempts($userId),
             ]);
-        } catch (ResendCooldownException) {
+        } catch (AttemptLimitExceededException | ResendCooldownException) {
             $this->jsonResponse->send(['success' => false], 429);
         }
     }

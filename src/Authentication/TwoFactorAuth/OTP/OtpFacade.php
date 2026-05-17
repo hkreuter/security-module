@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP;
 
 use DateTimeImmutable;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\AttemptLimitExceededException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\ResendCooldownException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Notifier\Factory\OtpNotifierFactoryInterface;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Service\OtpChallengeStateServiceInterface;
@@ -67,6 +68,10 @@ class OtpFacade implements TwoFAServiceInterface, TwoFAResendableInterface
     {
         if (!$this->sendPolicy->canSend($userId)) {
             throw new ResendCooldownException();
+        }
+
+        if ($this->getRemainingAttempts($userId) === 0) {
+            throw new AttemptLimitExceededException();
         }
 
         $code = $this->codeGenerator->generateCode();

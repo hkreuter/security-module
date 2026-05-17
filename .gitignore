@@ -1,8 +1,12 @@
 .idea
 .php_cs.cache
 tests/.phpunit.result.cache
+tests/.phpunit.cache/
 .deptrac.cache
 composer.lock
 /vendor/
+/source/
+/var/
 tests/reports/
 tests/Codeception/_data/
+tests/Codeception/Support/Data/generated/

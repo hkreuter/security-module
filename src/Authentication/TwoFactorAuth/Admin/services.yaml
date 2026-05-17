@@ -1,0 +1,23 @@
+parameters:
+  oe_security.admin_2fa_enabled: '%env(default::bool:OE_SECURITY_ADMIN_2FA_ENABLED)%'
+
+services:
+  _defaults:
+    autowire: true
+    public: false
+    bind:
+      OxidEsales\Eshop\Core\Utils: '@=service("OxidEsales\\SecurityModule\\Core\\Registry").getUtils()'
+      OxidEsales\Eshop\Core\UtilsView: '@=service("OxidEsales\\SecurityModule\\Core\\Registry").getUtilsView()'
+      OxidEsales\Eshop\Core\Session: '@=service("OxidEsales\\SecurityModule\\Core\\Registry").getSession()'
+
+  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Admin\Service\AdminTwoFaLoginServiceInterface:
+    class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Admin\Service\AdminTwoFaLoginService
+    public: true
+
+  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Admin\Controller\AdminTwoFactorAuthController:
+    public: true
+    tags:
+      - { name: 'oxid.view_controller', controller_key: 'oesm_admin_twofactorauth' }
+
+  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Admin\Controller\AdminTwoFaApiController:
+    public: true

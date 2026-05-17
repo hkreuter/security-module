@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Integration\Authentication\TwoFactorAuth\Controller;
+namespace OxidEsales\SecurityModule\Tests\Integration\Authentication\TwoFactorAuth\Shop\Controller;
 
 use Generator;
 use OxidEsales\Eshop\Application\Controller\AccountController;
@@ -15,7 +15,7 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\UtilsServer;
 use OxidEsales\EshopCommunity\Internal\Transition\Utility\ContextInterface;
-use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Controller\AccountSecurityController;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Shop\Controller\AccountSecurityController;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAUserSettingsInterface;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Transput\UserSettingsUpdateRequestInterface;
 use OxidEsales\SecurityModule\Tests\Integration\IntegrationTestCase;

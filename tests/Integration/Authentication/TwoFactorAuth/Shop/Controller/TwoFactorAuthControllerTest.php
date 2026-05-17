@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Integration\Authentication\TwoFactorAuth\Controller;
+namespace OxidEsales\SecurityModule\Tests\Integration\Authentication\TwoFactorAuth\Shop\Controller;
 
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Utils;
 use OxidEsales\Eshop\Core\UtilsView;
-use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Controller\TwoFactorAuthController;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Shop\Controller\TwoFactorAuthController;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFAResendableInterface;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFAServiceInterface;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFAUserServiceInterface;

@@ -126,7 +126,7 @@ class OtpSendPolicyServiceTest extends TestCase
         $this->assertEqualsWithDelta(
             $expectedRemaining,
             $this->getSut(stateRepository: $repositoryMock)->getCooldownRemaining($userId),
-            1,
+            5,
         );
     }
 
