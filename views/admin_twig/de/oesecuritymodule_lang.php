@@ -27,6 +27,14 @@ $aLang = [
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_15min' => '15 min',
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_30min' => '30 min',
 
+    'SHOP_MODULE_GROUP_form_security'                    => 'Formularsicherheit',
+    'SHOP_MODULE_oeSecurityGetFormStripStoken'           => 'Session-Token aus GET-Formular-URLs entfernen',
+    'HELP_SHOP_MODULE_oeSecurityGetFormStripStoken'      => 'Wenn aktiviert, werden Session-Tokens (stoken) aus GET-Formular-Übertragungen entfernt. ' .
+        'Dieses Modul bietet Abdeckung für das Apex-Theme-Suchformular, den Attributfilter und die Produktliste. ' .
+        'Benutzerdefinierte Themes oder zusätzliche Module können diese Einstellung über ' .
+        'oViewConf.getSecurityModuleFormSettings().isGetFormStripStokenEnabled() integrieren. ' .
+        'POST-Formulare sind nicht betroffen.',
+
     'SHOP_MODULE_GROUP_two_factor_auth'            => 'Zwei-Faktor-Authentifizierung',
     'SHOP_MODULE_oeSecurityTwoFactorAuthEnabled'   => 'Zwei-Faktor-Authentifizierung aktivieren',
     'SHOP_MODULE_oeSecurityTwoFactorAuthType'      => 'Art der Zwei-Faktor-Authentifizierung',
