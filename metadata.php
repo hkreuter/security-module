@@ -10,6 +10,7 @@
  */
 
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettings as TwoFactorAuthModuleSettings;
+use OxidEsales\SecurityModule\FormSecurity\Service\ModuleSettingsService as FormSecurityModuleSettings;
 use OxidEsales\SecurityModule\PasswordPolicy\Service\ModuleSettingsService as PasswordPolicyModuleSettings;
 use OxidEsales\SecurityModule\Captcha\Service\ModuleSettingsService as CaptchaModuleSettings;
 use OxidEsales\SecurityModule\Core\Module;
@@ -111,6 +112,14 @@ $aModule = [
             'type'  => 'select',
             'constraints' => '5min|15min|30min',
             'value' => '15min'
+        ],
+
+        //Form security
+        [
+            'group' => 'form_security',
+            'name'  => FormSecurityModuleSettings::GET_FORM_STRIP_STOKEN,
+            'type'  => 'bool',
+            'value' => false
         ],
 
         //TwoFactorAuth settings

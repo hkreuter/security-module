@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.0] - Unreleased
 
+### Added
+- Strip session token (stoken) from GET form URLs (search, attribute filter, product list) via new Form Security admin setting
+
 ### Changed
 - Updated to work with OXID eShop 7.5.x
 - Minimum PHP version is now 8.3, tested with up to PHP 8.5
