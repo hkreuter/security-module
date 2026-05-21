@@ -12,6 +12,7 @@ namespace OxidEsales\SecurityModule\Shared\Core;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettingsInterface;
 use OxidEsales\SecurityModule\Captcha\Captcha\Image\Service\ImageCaptchaService;
 use OxidEsales\SecurityModule\Captcha\Service\CaptchaServiceInterface;
+use OxidEsales\SecurityModule\FormSecurity\Service\ModuleSettingsServiceInterface as FormSecuritySettingsServiceInterface;
 use OxidEsales\SecurityModule\PasswordPolicy\Service\ModuleSettingsServiceInterface as PasswordSettingsServiceInterface;
 use OxidEsales\SecurityModule\Captcha\Service\ModuleSettingsServiceInterface as CaptchaSettingsServiceInterface;
 use OxidEsales\Eshop\Core\Registry;
@@ -56,5 +57,28 @@ class ViewConfig extends ViewConfig_parent
     public function isTwoFAEnabledForShop(): bool
     {
         return $this->getService(TwoFAShopSettingsInterface::class)->isTwoFactorAuthEnabled();
+    }
+
+    public function getSecurityModuleFormSettings(): FormSecuritySettingsServiceInterface
+    {
+        return $this->getService(FormSecuritySettingsServiceInterface::class);
+    }
+
+    public function getHiddenParamsOnly(): string
+    {
+        $value = '';
+
+        if (($lang = $this->getFormLang())) {
+            $value .= "\n{$lang}";
+        }
+
+        $value .= $this->getAdditionalRequestParameters();
+
+        return $value;
+    }
+
+    protected function getFormLang(): string
+    {
+        return Registry::getLang()->getFormLang();
     }
 }
