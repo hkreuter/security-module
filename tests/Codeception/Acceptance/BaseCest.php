@@ -15,6 +15,7 @@ use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServ
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettings;
 use OxidEsales\SecurityModule\Captcha\Service\ModuleSettingsService as CaptchaModuleSettingsService;
 use OxidEsales\SecurityModule\Core\Module;
+use OxidEsales\SecurityModule\FormSecurity\Service\ModuleSettingsService as FormSecurityModuleSettings;
 use OxidEsales\SecurityModule\Tests\Codeception\Support\AcceptanceTester;
 use OxidEsales\SecurityModule\PasswordPolicy\Service\ModuleSettingsServiceInterface as PasswordSettingsServiceInterface;
 
@@ -51,6 +52,15 @@ abstract class BaseCest
     {
         ContainerFacade::get(ModuleSettingServiceInterface::class)->saveBoolean(
             TwoFAShopSettings::ACTIVE,
+            $state,
+            Module::MODULE_ID
+        );
+    }
+
+    protected function setGetFormStripStokenState(bool $state): void
+    {
+        ContainerFacade::get(ModuleSettingServiceInterface::class)->saveBoolean(
+            FormSecurityModuleSettings::GET_FORM_STRIP_STOKEN,
             $state,
             Module::MODULE_ID
         );
