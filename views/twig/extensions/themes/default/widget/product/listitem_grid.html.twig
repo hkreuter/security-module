@@ -1,0 +1,67 @@
+{% extends 'widget/product/listitem_grid.html.twig' %}
+
+{% block widget_product_listitem_grid_tobasket %}
+    {% if oViewConf.getSecurityModuleFormSettings().isGetFormStripStokenEnabled() %}
+        <div class="actions d-none d-lg-block">
+            <div class="bottom">
+                {% if blShowToBasket %}
+                    {% hasrights { ident: "TOBASKET" } %}
+                        <form name="tobasket{{ testid }}" {% if blShowToBasket %}action="{{ oViewConf.getSelfActionLink()|raw }}" method="post"{% else %}action="{{ _productLink|raw }}" method="get"{% endif %}>
+                            <div class="d-none">
+                                {{ oViewConf.getNavFormParams()|raw }}
+                                {% if blShowToBasket %}
+                                    {{ oViewConf.getHiddenSid()|raw }}
+                                {% else %}
+                                    {{ oViewConf.getHiddenParamsOnly()|raw }}
+                                {% endif %}
+                                <input type="hidden" name="pgNr" value="{{ oView.getActPage() }}">
+                                {% if recommid %}
+                                    <input type="hidden" name="recommid" value="{{ recommid }}">
+                                {% endif %}
+                                {% if blShowToBasket %}
+                                    {% hasrights { ident: "TOBASKET" } %}
+                                        <input type="hidden" name="cl" value="{{ oViewConf.getTopActiveClassName() }}">
+                                        {% if owishid %}
+                                            <input type="hidden" name="owishid" value="{{ owishid }}">
+                                        {% endif %}
+                                        {% if toBasketFunction %}
+                                            <input type="hidden" name="fnc" value="{{ toBasketFunction }}">
+                                        {% else %}
+                                            <input type="hidden" name="fnc" value="tobasket">
+                                        {% endif %}
+                                        <input type="hidden" name="aid" value="{{ product.oxarticles__oxid.value }}">
+                                        {% if altproduct %}
+                                            <input type="hidden" name="anid" value="{{ altproduct }}">
+                                        {% else %}
+                                            <input type="hidden" name="anid" value="{{ product.oxarticles__oxnid.value }}">
+                                        {% endif %}
+                                    {% endhasrights %}
+                                {% else %}
+                                    <input type="hidden" name="cl" value="details">
+                                    <input type="hidden" name="anid" value="{{ product.oxarticles__oxnid.value }}">
+                                {% endif %}
+                            </div>
+
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="am" value="1" aria-label="{{ translate({ ident: "QUANTITY" }) }} - {{ product.oxarticles__oxtitle.value }}" aria-describedby="submit{{ testid }}">
+                                <button type="submit" id="submit{{ testid }}" class="btn btn-highlight">
+                                    {{ translate({ ident: "TO_CART" }) }}
+                                </button>
+                            </div>
+
+                        </form>
+                    {% endhasrights %}
+                {% else %}
+                    <a class="btn btn-outline-primary w-100" href="{{ _productLink|raw }}">{{ translate({ ident: "DETAILS" }) }} - {{ product.oxarticles__oxtitle.value }}</a>
+                {% endif %}
+            </div>
+            <div class="right">
+                {% block widget_product_listitem_grid_addtowishlist %}
+                    {{ parent() }}
+                {% endblock %}
+            </div>
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
