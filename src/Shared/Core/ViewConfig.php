@@ -12,6 +12,7 @@ namespace OxidEsales\SecurityModule\Shared\Core;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettingsInterface;
 use OxidEsales\SecurityModule\Captcha\Captcha\Image\Service\ImageCaptchaService;
 use OxidEsales\SecurityModule\Captcha\Service\CaptchaServiceInterface;
+// phpcs:ignore Generic.Files.LineLength
 use OxidEsales\SecurityModule\FormSecurity\Service\ModuleSettingsServiceInterface as FormSecuritySettingsServiceInterface;
 use OxidEsales\SecurityModule\PasswordPolicy\Service\ModuleSettingsServiceInterface as PasswordSettingsServiceInterface;
 use OxidEsales\SecurityModule\Captcha\Service\ModuleSettingsServiceInterface as CaptchaSettingsServiceInterface;

@@ -12,6 +12,7 @@ namespace OxidEsales\SecurityModule\Tests\Integration\Shared\Core;
 use Generator;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettingsInterface;
+// phpcs:ignore Generic.Files.LineLength
 use OxidEsales\SecurityModule\FormSecurity\Service\ModuleSettingsServiceInterface as FormSecuritySettingsServiceInterface;
 use OxidEsales\SecurityModule\Shared\Core\ViewConfig;
 use OxidEsales\SecurityModule\Tests\Integration\IntegrationTestCase;
