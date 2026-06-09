@@ -18,6 +18,12 @@ interface TwoFAServiceInterface
     public function invalidateChallenge(string $userId): void;
 
     /**
+     * Consume a successfully-completed challenge so it cannot be reused (e.g. after the oxapi
+     * verify mutation has minted its token). Counterpart to invalidateChallenge (abandon).
+     */
+    public function consumeChallenge(string $userId): void;
+
+    /**
      * @throws CodeValidationException
      */
     public function verify(string $userId, #[\SensitiveParameter] string $code): void;

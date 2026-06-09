@@ -57,6 +57,11 @@ class OtpFacade implements TwoFAServiceInterface, TwoFAResendableInterface
         $this->stateService->deleteChallengeState($userId);
     }
 
+    public function consumeChallenge(string $userId): void
+    {
+        $this->stateService->deleteChallengeState($userId);
+    }
+
     public function verify(string $userId, #[\SensitiveParameter] string $code): void
     {
         $this->codeValidator->validateCode($userId, $code);

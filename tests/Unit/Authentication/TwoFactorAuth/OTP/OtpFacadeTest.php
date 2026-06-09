@@ -106,6 +106,19 @@ class OtpFacadeTest extends TestCase
     }
 
     #[Test]
+    public function consumeChallengeDeletesChallengeState(): void
+    {
+        $stateServiceSpy = $this->createMock(OtpChallengeStateServiceInterface::class);
+        $stateServiceSpy->expects($this->once())
+            ->method('deleteChallengeState')
+            ->with($userId = uniqid());
+
+        $sut = $this->getSut(stateService: $stateServiceSpy);
+
+        $sut->consumeChallenge(userId: $userId);
+    }
+
+    #[Test]
     public function verifyTriggersCodeValidator(): void
     {
         $codeValidatorSpy = $this->createMock(OtpCodeValidatorServiceInterface::class);
