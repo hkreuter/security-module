@@ -10,17 +10,19 @@ declare(strict_types=1);
 namespace OxidEsales\SecurityModule\GraphQL\EventSubscriber;
 
 use OxidEsales\GraphQL\Base\Event\BeforeTokenCreation;
+use OxidEsales\SecurityModule\GraphQL\DataType\TwoFAPendingUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * SPIKE EXPERIMENT — validate that a subscriber to a graphql-base event compiles safely when
- * graphql-base is ABSENT. The real implementation will stamp the mfa_pending claim for a
- * TwoFAPendingUser via $event->withClaim(...).
+ * Stamps the `mfa_pending` claim onto the JWT when the API login produced a TwoFAPendingUser,
+ * marking it as a short-lived 2FA challenge token that the verifyTwoFactor* mutations exchange
+ * for a full token once the OTP is verified.
  *
- * Safe-when-absent rationale: implements the CORE Symfony EventSubscriberInterface (always
- * present); keys getSubscribedEvents() by BeforeTokenCreation::class (a compile-time string —
- * does NOT autoload the event class); the handler's param typehint is only resolved when the
- * event fires, which never happens without graphql-base.
+ * Safe when the optional graphql-base module is absent: implements the CORE Symfony
+ * EventSubscriberInterface (always present); keys getSubscribedEvents() by
+ * BeforeTokenCreation::class (a compile-time string — does NOT autoload the event class); the
+ * handler's param typehint is only resolved when the event fires, which never happens without
+ * graphql-base.
  */
 final class BeforeTokenCreationSubscriber implements EventSubscriberInterface
 {
@@ -31,7 +33,8 @@ final class BeforeTokenCreationSubscriber implements EventSubscriberInterface
 
     public function onBeforeTokenCreation(BeforeTokenCreation $event): void
     {
-        // experiment stub — real impl: if $event->getUser() is a TwoFAPendingUser,
-        // $event->withClaim('mfa_pending', true) + reduce TTL.
+        if ($event->getUser() instanceof TwoFAPendingUser) {
+            $event->withClaim('mfa_pending', true);
+        }
     }
 }
