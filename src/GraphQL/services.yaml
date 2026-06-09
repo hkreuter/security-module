@@ -12,6 +12,13 @@ services:
     autowire: false
     arguments: ['@.inner']
 
+  # Same fail-safe pattern: never hand a usable refresh token to a 2FA-pending user.
+  OxidEsales\SecurityModule\GraphQL\Service\PendingAwareRefreshTokenService:
+    decorates: OxidEsales\GraphQL\Base\Service\RefreshTokenServiceInterface
+    decoration_on_invalid: ignore
+    autowire: false
+    arguments: ['@.inner']
+
   # Subscribes to graphql-base's BeforeTokenCreation. Safe when base absent: CORE
   # EventSubscriberInterface, event keyed by ::class (compile-time string, no autoload),
   # no graphql-base constructor deps.
