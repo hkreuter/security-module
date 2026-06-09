@@ -11,3 +11,18 @@ services:
     decoration_on_invalid: ignore
     autowire: false
     arguments: ['@.inner']
+
+  # Subscribes to graphql-base's BeforeTokenCreation. Safe when base absent: CORE
+  # EventSubscriberInterface, event keyed by ::class (compile-time string, no autoload),
+  # no graphql-base constructor deps.
+  OxidEsales\SecurityModule\GraphQL\EventSubscriber\BeforeTokenCreationSubscriber:
+    autowire: false
+    tags:
+      - { name: kernel.event_subscriber }
+
+  # Plain duck-typed namespace mapper (no graphql-base interface). Tag consumed only by
+  # graphql-base's compiler pass → inert + safe when base absent.
+  OxidEsales\SecurityModule\GraphQL\Infrastructure\NamespaceMapper:
+    autowire: false
+    tags:
+      - { name: graphql_namespace_mapper }
