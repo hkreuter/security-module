@@ -2,6 +2,7 @@ imports:
   - { resource: src/Captcha/services.yaml }
   - { resource: src/PasswordPolicy/services.yaml }
   - { resource: src/Authentication/services.yaml }
+  - { resource: src/GraphQL/services.yaml }
 
 services:
   _defaults:

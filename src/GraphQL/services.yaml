@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: false
+
+  # Fail-safe: graphql-base is an OPTIONAL (require-dev) module. If its Legacy service is not
+  # registered (graphql-base absent), decoration_on_invalid: ignore drops this decorator, and
+  # autowire: false keeps the class from being reflected/autoloaded at compile time — so the
+  # shop-wide container still compiles cleanly without graphql-base.
+  OxidEsales\SecurityModule\GraphQL\Infrastructure\SecureApiLegacy:
+    decorates: OxidEsales\GraphQL\Base\Infrastructure\Legacy
+    decoration_on_invalid: ignore
+    autowire: false
+    arguments: ['@.inner']
