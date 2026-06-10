@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\GraphQL\DataType;
+namespace OxidEsales\SecurityModule\GraphQL\Authentication\DataType;
 
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
 use OxidEsales\GraphQL\Base\DataType\UserInterface;

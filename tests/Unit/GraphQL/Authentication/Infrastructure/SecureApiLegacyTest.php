@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Infrastructure;
+namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\Infrastructure;
 
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
@@ -15,8 +15,8 @@ use OxidEsales\GraphQL\Base\DataType\User;
 use OxidEsales\GraphQL\Base\Exception\InvalidLogin;
 use OxidEsales\GraphQL\Base\Infrastructure\Legacy;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\TwoFactorRequiredException;
-use OxidEsales\SecurityModule\GraphQL\DataType\TwoFAPendingUser;
-use OxidEsales\SecurityModule\GraphQL\Infrastructure\SecureApiLegacy;
+use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\Infrastructure\SecureApiLegacy;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

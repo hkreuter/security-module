@@ -7,8 +7,10 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\GraphQL\Controller;
+namespace OxidEsales\SecurityModule\GraphQL\Authentication\Controller;
 
+use OxidEsales\GraphQL\Base\DataType\Login;
+use OxidEsales\GraphQL\Base\DataType\LoginInterface;
 use OxidEsales\GraphQL\Base\DataType\User;
 use OxidEsales\GraphQL\Base\Exception\InvalidToken;
 use OxidEsales\GraphQL\Base\Infrastructure\Legacy;
@@ -45,6 +47,22 @@ final class TwoFactorVerify
         $this->twoFAService->consumeChallenge((string)$user->id()->val());
 
         return $accessToken;
+    }
+
+    #[Mutation]
+    public function verifyTwoFactorLogin(string $otp): LoginInterface
+    {
+        $user = $this->resolveVerifiedUser($otp);
+
+        $login = new Login(
+            refreshToken: $this->refreshTokenService->createRefreshTokenForUser($user),
+            accessToken: $this->tokenService->createTokenForUser($user),
+        );
+
+        // Consume only after both tokens are minted, so a failure stays retryable.
+        $this->twoFAService->consumeChallenge((string)$user->id()->val());
+
+        return $login;
     }
 
     /**

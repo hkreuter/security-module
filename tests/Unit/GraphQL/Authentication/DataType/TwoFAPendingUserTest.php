@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\DataType;
+namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\DataType;
 
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
-use OxidEsales\SecurityModule\GraphQL\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

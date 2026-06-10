@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\GraphQL\Infrastructure;
+namespace OxidEsales\SecurityModule\GraphQL\Authentication\Infrastructure;
 
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
@@ -17,7 +17,7 @@ use OxidEsales\GraphQL\Base\DataType\UserInterface;
 use OxidEsales\GraphQL\Base\Exception\InvalidLogin;
 use OxidEsales\GraphQL\Base\Infrastructure\Legacy;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\TwoFactorRequiredException;
-use OxidEsales\SecurityModule\GraphQL\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
 
 /**
  * Decorates graphql-base's Legacy so the oxapi login flow can enforce 2FA.

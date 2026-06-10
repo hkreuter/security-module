@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\GraphQL\EventSubscriber;
+namespace OxidEsales\SecurityModule\GraphQL\Authentication\EventSubscriber;
 
 use OxidEsales\GraphQL\Base\Event\BeforeTokenCreation;
-use OxidEsales\SecurityModule\GraphQL\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

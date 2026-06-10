@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\EventSubscriber;
+namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\EventSubscriber;
 
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
 use OxidEsales\GraphQL\Base\DataType\UserInterface;
 use OxidEsales\GraphQL\Base\Event\BeforeTokenCreation;
-use OxidEsales\SecurityModule\GraphQL\DataType\TwoFAPendingUser;
-use OxidEsales\SecurityModule\GraphQL\EventSubscriber\BeforeTokenCreationSubscriber;
+use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\EventSubscriber\BeforeTokenCreationSubscriber;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
