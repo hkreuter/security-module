@@ -29,6 +29,8 @@
         "codeception/module-db": "*",
         "codeception/module-filesystem": "*",
         "codeception/module-webdriver": "*",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-rest": "*",
         "oxid-esales/codeception-modules": "dev-b-7.5.x",
         "oxid-esales/codeception-page-objects": "dev-b-7.5.x",
         "mikey179/vfsstream": "^1.6"
@@ -43,7 +45,8 @@
     },
     "autoload-dev": {
             "psr-4": {
-                "OxidEsales\\EshopCommunity\\Tests\\": "./vendor/oxid-esales/oxideshop-ce/tests"
+                "OxidEsales\\EshopCommunity\\Tests\\": "./vendor/oxid-esales/oxideshop-ce/tests",
+                "OxidEsales\\GraphQL\\Base\\Tests\\": "./vendor/oxid-esales/graphql-base/tests"
             }
         },
     "scripts": {
@@ -72,10 +75,16 @@
             "THEME_ID=apex MODULE_IDS=oe_security_module SHOP_ROOT_PATH=/var/www vendor/bin/codecept run Acceptance -c tests/codeception.yml --no-redirect"
         ],
 
+        "tests-codeception-oxapi": [
+            "Composer\\Config::disableProcessTimeout",
+            "THEME_ID=apex MODULE_IDS=oe_graphql_base,oe_security_module SHOP_ROOT_PATH=/var/www vendor/bin/codecept run AcceptanceOXAPI -c tests/codeception.yml --no-redirect"
+        ],
+
         "tests-all": [
             "@tests-unit",
             "@tests-integration",
-            "@tests-codeception"
+            "@tests-codeception",
+            "@tests-codeception-oxapi"
         ]
     },
     "config": {

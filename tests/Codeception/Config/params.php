@@ -38,6 +38,8 @@ return [
     'PHP_BIN' => getenv('PHPBIN') ?: 'php',
     'SCREEN_SHOT_URL' => getenv('CC_SCREEN_SHOTS_PATH') ?: '',
     'THEME_ID' => getenv('THEME_ID') ?: 'apex',
+    'MAIL_HOST' => getenv('MAIL_HOST') ?: 'mailpit',
+    'MAIL_WEB_PORT' => getenv('MAIL_WEB_PORT') ?: '8025',
 ];
 
 function getTemporaryDataDumpFilePath(): string

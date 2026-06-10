@@ -1,0 +1,48 @@
+# OXAPI (GraphQL) acceptance suite — HTTP, not browser.
+# Sends GraphQL over /graphql via graphql-base's AcceptanceHelper (REST+PhpBrowser) and reads the
+# real OTP email out of Mailpit, so the full two-step 2FA token exchange is exercised end to end.
+actor: AcceptanceTester
+path: AcceptanceOXAPI
+bootstrap: _bootstrap.php
+
+modules:
+  enabled:
+    - Asserts
+    - \OxidEsales\SecurityModule\Tests\Codeception\Support\Helper\AcceptanceOxapi
+    - \OxidEsales\Codeception\Module\ShopSetup:
+        dump: '%DUMP_PATH%'
+        fixtures: '%FIXTURES_PATH%'
+        license: '%license_key%'
+    - Db:
+        dsn: 'mysql:host=%DB_HOST%;dbname=%DB_NAME%;charset=utf8'
+        user: '%DB_USERNAME%'
+        password: '%DB_PASSWORD%'
+        port: '%DB_PORT%'
+        dump: '%DUMP_PATH%'
+        module_dump: '%MODULE_DUMP_PATH%'
+        mysql_config: '%MYSQL_CONFIG_PATH%'
+        populate: true # run populator before all tests
+        cleanup: false # run populator before each test
+        populator: >
+          mysql --defaults-file=$mysql_config --default-character-set=utf8 $dbname < $dump
+          && mysql --defaults-file=$mysql_config --default-character-set=utf8 $dbname < $module_dump
+    - \OxidEsales\Codeception\Module\Database:
+        depends: Db
+    - PhpBrowser:
+        url: '%SHOP_URL%'
+    - REST:
+        url: '%SHOP_URL%'
+        depends: PhpBrowser
+        part: Json
+    - \OxidEsales\Codeception\Module\OxideshopModules
+    - Mailpit:
+        url: '%MAIL_HOST%'
+        port: '%MAIL_WEB_PORT%'
+    - \OxidEsales\Codeception\Module\Email:
+        depends:
+          - Mailpit
+    - \OxidEsales\GraphQL\Base\Tests\Codeception\Module\AcceptanceHelper:
+        depends:
+          - REST
+step_decorators:
+    - \Codeception\Step\Retry
