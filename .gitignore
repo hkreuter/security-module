@@ -5,4 +5,11 @@ tests/.phpunit.result.cache
 composer.lock
 /vendor/
 tests/reports/
+tests/Reports/
+tests/.phpunit.cache/
 tests/Codeception/_data/
+tests/Codeception/Support/Data/generated/
+
+# Root-install-mode artifacts (composer update run inside the module installs the shop here)
+/source/
+/var/
