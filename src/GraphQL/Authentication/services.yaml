@@ -26,3 +26,17 @@ services:
     autowire: false
     tags:
       - { name: kernel.event_subscriber }
+
+  # The verify mutations (discovered via Shared\NamespaceMapper -> Authentication/Controller/).
+  # Fail-safe: graphql-base deps are injected optionally (@?) so the shop-wide container compiles
+  # when graphql-base is absent (the controller's hard typehints would otherwise break the
+  # CheckExceptionOnInvalidReferenceBehaviorPass). When absent the deps resolve to null, the
+  # controller is never instantiated (schema not built), and its accessors throw if ever reached.
+  OxidEsales\SecurityModule\GraphQL\Authentication\Controller\TwoFactorVerify:
+    public: true
+    autowire: false
+    arguments:
+      $twoFAService: '@OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFAServiceInterface'
+      $tokenService: '@?OxidEsales\GraphQL\Base\Service\Token'
+      $legacy: '@?OxidEsales\GraphQL\Base\Infrastructure\Legacy'
+      $refreshTokenService: '@?OxidEsales\GraphQL\Base\Service\RefreshTokenServiceInterface'
