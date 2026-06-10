@@ -11,6 +11,7 @@ namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\Infrastruc
 
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
+use OxidEsales\Eshop\Core\Email;
 use OxidEsales\GraphQL\Base\DataType\User;
 use OxidEsales\GraphQL\Base\Exception\InvalidLogin;
 use OxidEsales\GraphQL\Base\Infrastructure\Legacy;
@@ -90,15 +91,96 @@ class SecureApiLegacyTest extends TestCase
     }
 
     #[Test]
-    public function nonLoginCallsDelegateToTheInnerLegacy(): void
+    public function getShopIdDelegatesToTheInnerLegacy(): void
     {
         $shopId = mt_rand(1, 99);
         $innerMock = $this->createMock(Legacy::class);
         $innerMock->expects($this->once())->method('getShopId')->willReturn($shopId);
 
-        $sut = $this->getSut(inner: $innerMock);
+        $this->assertSame($shopId, $this->getSut(inner: $innerMock)->getShopId());
+    }
 
-        $this->assertSame($shopId, $sut->getShopId());
+    #[Test]
+    public function getUserModelDelegatesTheUserIdToTheInnerLegacy(): void
+    {
+        $userId = uniqid();
+        $model = $this->createStub(EshopUserModel::class);
+        $innerMock = $this->createMock(Legacy::class);
+        $innerMock->expects($this->once())->method('getUserModel')->with($userId)->willReturn($model);
+
+        $this->assertSame($model, $this->getSut(inner: $innerMock)->getUserModel($userId));
+    }
+
+    #[Test]
+    public function getConfigParamDelegatesToTheInnerLegacy(): void
+    {
+        $param = uniqid();
+        $value = uniqid();
+        $innerMock = $this->createMock(Legacy::class);
+        $innerMock->expects($this->once())->method('getConfigParam')->with($param)->willReturn($value);
+
+        $this->assertSame($value, $this->getSut(inner: $innerMock)->getConfigParam($param));
+    }
+
+    #[Test]
+    public function getShopUrlDelegatesToTheInnerLegacy(): void
+    {
+        $url = 'https://' . uniqid() . '.example.com/';
+        $innerMock = $this->createMock(Legacy::class);
+        $innerMock->expects($this->once())->method('getShopUrl')->willReturn($url);
+
+        $this->assertSame($url, $this->getSut(inner: $innerMock)->getShopUrl());
+    }
+
+    #[Test]
+    public function getLanguageIdDelegatesToTheInnerLegacy(): void
+    {
+        $languageId = mt_rand(0, 9);
+        $innerMock = $this->createMock(Legacy::class);
+        $innerMock->expects($this->once())->method('getLanguageId')->willReturn($languageId);
+
+        $this->assertSame($languageId, $this->getSut(inner: $innerMock)->getLanguageId());
+    }
+
+    #[Test]
+    public function isValidEmailDelegatesToTheInnerLegacy(): void
+    {
+        $email = uniqid() . '@example.com';
+        $innerMock = $this->createMock(Legacy::class);
+        $innerMock->expects($this->once())->method('isValidEmail')->with($email)->willReturn(true);
+
+        $this->assertTrue($this->getSut(inner: $innerMock)->isValidEmail($email));
+    }
+
+    #[Test]
+    public function getEmailDelegatesToTheInnerLegacy(): void
+    {
+        $emailStub = $this->createStub(Email::class);
+        $innerMock = $this->createMock(Legacy::class);
+        $innerMock->expects($this->once())->method('getEmail')->willReturn($emailStub);
+
+        $this->assertSame($emailStub, $this->getSut(inner: $innerMock)->getEmail());
+    }
+
+    #[Test]
+    public function getUserGroupIdsDelegatesTheUserIdToTheInnerLegacy(): void
+    {
+        $userId = uniqid();
+        $groupIds = [uniqid(), uniqid()];
+        $innerMock = $this->createMock(Legacy::class);
+        $innerMock->expects($this->once())->method('getUserGroupIds')->with($userId)->willReturn($groupIds);
+
+        $this->assertSame($groupIds, $this->getSut(inner: $innerMock)->getUserGroupIds($userId));
+    }
+
+    #[Test]
+    public function createUniqueIdentifierDelegatesToTheInnerLegacy(): void
+    {
+        $identifier = uniqid();
+        $innerMock = $this->createMock(Legacy::class);
+        $innerMock->expects($this->once())->method('createUniqueIdentifier')->willReturn($identifier);
+
+        $this->assertSame($identifier, $this->getSut(inner: $innerMock)->createUniqueIdentifier());
     }
 
     private function getSut(?Legacy $inner = null): SecureApiLegacy
