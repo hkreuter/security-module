@@ -118,6 +118,9 @@ final class VerifyTwoFactorTokenCest extends BaseCest
         $I->assertArrayHasKey('errors', $data, 'A wrong OTP must error');
         $I->assertNull($data['data']['verifyTwoFactorToken'] ?? null, 'No token on a wrong OTP');
         $I->seeInDatabase('oesm_2fa_otp', ['OXUSERID' => $user['userId']]);
+        // The domain failure must surface as a clean, client-safe message — NOT "Internal server error".
+        $message = $data['errors'][0]['message'] ?? '';
+        $I->assertSame('Invalid or expired two-factor code', $message);
     }
 
     public function verifyTwoFactorTokenRejectsANonChallengeToken(AcceptanceTester $I): void

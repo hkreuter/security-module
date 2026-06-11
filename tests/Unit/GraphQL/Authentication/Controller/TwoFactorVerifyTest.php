@@ -16,8 +16,10 @@ use OxidEsales\GraphQL\Base\Exception\InvalidToken;
 use OxidEsales\GraphQL\Base\Infrastructure\Legacy;
 use OxidEsales\GraphQL\Base\Service\RefreshTokenServiceInterface;
 use OxidEsales\GraphQL\Base\Service\Token;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\InvalidCodeException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFAServiceInterface;
 use OxidEsales\SecurityModule\GraphQL\Authentication\Controller\TwoFactorVerify;
+use OxidEsales\SecurityModule\GraphQL\Authentication\Exception\TwoFactorChallengeException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -59,6 +61,33 @@ class TwoFactorVerifyTest extends TestCase
         );
 
         $this->assertSame($accessToken, $sut->verifyTwoFactorToken($otp));
+    }
+
+    #[Test]
+    public function verifyTwoFactorTokenTranslatesOtpFailureToClientAwareErrorAndKeepsChallenge(): void
+    {
+        $userId = uniqid();
+        $tokenStub = $this->createStub(Token::class);
+        $tokenStub->method('getTokenClaim')->willReturnCallback(
+            fn(string $claim, mixed $default = null): mixed => match ($claim) {
+                'mfa_pending' => true,
+                'mfa_exp' => time() + 300,
+                Token::CLAIM_USERID => $userId,
+                default => $default,
+            }
+        );
+
+        $twoFAServiceMock = $this->createMock(TwoFAServiceInterface::class);
+        $twoFAServiceMock->method('verify')->willThrowException(new InvalidCodeException());
+        // Challenge must NOT be consumed when verification fails.
+        $twoFAServiceMock->expects($this->never())->method('consumeChallenge');
+
+        $sut = $this->getSut(tokenService: $tokenStub, twoFAService: $twoFAServiceMock);
+
+        $this->expectException(TwoFactorChallengeException::class);
+        $this->expectExceptionMessage('Invalid or expired two-factor code');
+
+        $sut->verifyTwoFactorToken(uniqid());
     }
 
     #[Test]

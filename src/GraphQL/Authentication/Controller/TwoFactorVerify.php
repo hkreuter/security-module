@@ -18,7 +18,9 @@ use OxidEsales\GraphQL\Base\Exception\InvalidToken;
 use OxidEsales\GraphQL\Base\Infrastructure\Legacy;
 use OxidEsales\GraphQL\Base\Service\RefreshTokenServiceInterface;
 use OxidEsales\GraphQL\Base\Service\Token;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\CodeValidationException;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFAServiceInterface;
+use OxidEsales\SecurityModule\GraphQL\Authentication\Exception\TwoFactorChallengeException;
 use TheCodingMachine\GraphQLite\Annotations\Mutation;
 
 /**
@@ -92,7 +94,14 @@ final class TwoFactorVerify
         }
 
         $userId = (string)$this->tokenService()->getTokenClaim(Token::CLAIM_USERID);
-        $this->twoFAService->verify($userId, $otp);
+
+        // Translate the security domain's validation failures (wrong/expired/too-many/consumed) into
+        // a client-aware GraphQL error; otherwise graphqlite masks them as "Internal server error".
+        try {
+            $this->twoFAService->verify($userId, $otp);
+        } catch (CodeValidationException $exception) {
+            throw new TwoFactorChallengeException(previous: $exception);
+        }
 
         return new User($this->legacy()->getUserModel($userId), false);
     }
