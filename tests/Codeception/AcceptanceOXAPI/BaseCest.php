@@ -62,6 +62,7 @@ abstract class BaseCest
     protected function resetOtpState(AcceptanceTester $I): void
     {
         $I->deleteFromDatabase('oesm_2fa_otp', ['OXUSERID' => $this->user()['userId']]);
+        $I->deleteFromDatabase('oegraphqltoken', ['OXUSERID' => $this->user()['userId']]);
     }
 
     /**

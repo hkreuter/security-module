@@ -37,6 +37,9 @@ final class TwoFAPendingUser implements UserInterface
         return (string)$this->userModel->getRawFieldData('oxusername');
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ShortMethodName)
+     */
     public function id(): ID
     {
         return new ID((string)$this->userModel->getId());

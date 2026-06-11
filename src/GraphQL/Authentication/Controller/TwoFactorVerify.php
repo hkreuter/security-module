@@ -52,7 +52,7 @@ final class TwoFactorVerify
         $accessToken = $this->tokenService()->createTokenForUser($user)->toString();
 
         // Consume only after the token is minted, so a failed mint stays retryable.
-        $this->twoFAService->consumeChallenge((string)$user->id()->val());
+        $this->twoFAService->consumeChallenge((string)$user->id());
 
         return $accessToken;
     }
@@ -68,7 +68,7 @@ final class TwoFactorVerify
         );
 
         // Consume only after both tokens are minted, so a failure stays retryable.
-        $this->twoFAService->consumeChallenge((string)$user->id()->val());
+        $this->twoFAService->consumeChallenge((string)$user->id());
 
         return $login;
     }
