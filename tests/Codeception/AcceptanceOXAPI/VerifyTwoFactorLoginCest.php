@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OxidEsales\SecurityModule\Tests\Codeception\AcceptanceOXAPI;
 
+use OxidEsales\GraphQL\Base\Service\FingerprintService;
 use OxidEsales\SecurityModule\Tests\Codeception\Support\AcceptanceTester;
 
 /**
@@ -77,6 +78,40 @@ final class VerifyTwoFactorLoginCest extends BaseCest
 
         $I->assertArrayHasKey('errors', $data, 'An empty/pending refresh token must not mint anything');
         $I->assertNull($data['data']['refresh'] ?? null);
+    }
+
+    public function refreshTokenIssuedByVerifiedLoginCanBeRedeemed(AcceptanceTester $I): void
+    {
+        // Closes the loop graphql-base's RefreshTokenCest doesn't cover: a refresh token minted via
+        // the 2FA verify path must redeem like any other (fingerprint cookie carried by the client).
+        $this->prepareTwoFAChallengeUser($I);
+        $user = $this->user();
+
+        $challenge = $this->requestLoginChallenge($I)['accessToken'];
+        $otp = $this->grabOtpFromEmail($I);
+
+        $I->amBearerAuthenticated($challenge);
+        $verified = $this->sendGraphQL($I, self::VERIFY_LOGIN, ['otp' => $otp])['data']['verifyTwoFactorLogin'];
+        $refreshToken = $verified['refreshToken'];
+        $fingerprintHash = $this->claimsOf($I, $verified['accessToken'])->get(FingerprintService::TOKEN_KEY);
+        $I->assertNotEmpty($refreshToken);
+        $I->assertNotEmpty($fingerprintHash, 'Verified access token must carry a fingerprint hash');
+
+        // refresh() is unauthenticated; the fingerprint cookie set during verify is carried by PhpBrowser.
+        $I->logout();
+        $data = $this->sendGraphQL(
+            $I,
+            'query ($rt: String!, $fp: String!) { refresh(refreshToken: $rt, fingerprintHash: $fp) }',
+            ['rt' => $refreshToken, 'fp' => $fingerprintHash]
+        );
+
+        $newAccessToken = $data['data']['refresh'] ?? null;
+        $I->assertNotEmpty($newAccessToken, 'A 2FA-issued refresh token must redeem for a new access token');
+
+        $claims = $this->claimsOf($I, $newAccessToken);
+        $I->assertFalse($claims->get('useranonymous'), 'Refreshed token must be a real user');
+        $I->assertFalse($claims->get('mfa_pending', false), 'Refreshed token must not be a pending challenge');
+        $I->assertSame($user['userId'], $claims->get('userid'));
     }
 
     private function requestLoginChallenge(AcceptanceTester $I): array
