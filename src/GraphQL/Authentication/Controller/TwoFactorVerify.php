@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OxidEsales\SecurityModule\GraphQL\Authentication\Controller;
 
+use DateTimeImmutable;
 use LogicException;
 use OxidEsales\GraphQL\Base\DataType\Login;
 use OxidEsales\GraphQL\Base\DataType\LoginInterface;
@@ -34,6 +35,7 @@ use TheCodingMachine\GraphQLite\Annotations\Mutation;
 final class TwoFactorVerify
 {
     private const CLAIM_MFA_PENDING = 'mfa_pending';
+    private const CLAIM_MFA_EXP = 'mfa_exp';
     private const BASE_REQUIRED = 'graphql-base is required for the oxapi two-factor verify mutations';
 
     public function __construct(
@@ -80,6 +82,13 @@ final class TwoFactorVerify
     {
         if ($this->tokenService()->getTokenClaim(self::CLAIM_MFA_PENDING, false) !== true) {
             throw new InvalidToken('Not a two-factor challenge token');
+        }
+
+        // The JWT `exp` (graphql-base default 8h) is far too long for a challenge token; enforce our
+        // own short, resend-independent window stamped by BeforeTokenCreationSubscriber.
+        $challengeExpiresAt = (int)$this->tokenService()->getTokenClaim(self::CLAIM_MFA_EXP, 0);
+        if ($challengeExpiresAt < (new DateTimeImmutable())->getTimestamp()) {
+            throw new InvalidToken('Two-factor challenge has expired');
         }
 
         $userId = (string)$this->tokenService()->getTokenClaim(Token::CLAIM_USERID);

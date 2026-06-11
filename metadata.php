@@ -128,5 +128,12 @@ $aModule = [
             'constraints' => 'otp',
             'value' => 'otp'
         ],
+        [
+            // Lifetime (seconds) of the oxapi 2FA challenge token; should cover the OTP window.
+            'group' => 'two_factor_auth',
+            'name'  => TwoFactorAuthModuleSettings::API_CHALLENGE_LIFETIME,
+            'type'  => 'num',
+            'value' => 300
+        ],
     ],
 ];

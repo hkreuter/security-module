@@ -15,6 +15,8 @@ interface TwoFAShopSettingsInterface
 
     public function getTwoFactorAuthType(): string;
 
+    public function getApiChallengeLifetime(): int;
+
     public function getVerificationUrl(): string;
 
     public function getAccountUrl(): string;

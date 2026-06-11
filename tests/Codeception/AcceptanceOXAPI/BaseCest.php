@@ -31,6 +31,7 @@ abstract class BaseCest
     protected function prepareTwoFAChallengeUser(AcceptanceTester $I): void
     {
         $this->setShopTwoFactorAuth(true);
+        $this->setApiChallengeLifetime(300); // pin the default so the window is deterministic
         $this->setUserTwoFA($I, true);
         $this->resetOtpState($I);
         $I->deleteAllEmails();
@@ -52,6 +53,12 @@ abstract class BaseCest
     {
         ContainerFacade::get(ModuleSettingServiceInterface::class)
             ->saveBoolean(TwoFAShopSettings::ACTIVE, $state, Module::MODULE_ID);
+    }
+
+    protected function setApiChallengeLifetime(int $seconds): void
+    {
+        ContainerFacade::get(ModuleSettingServiceInterface::class)
+            ->saveInteger(TwoFAShopSettings::API_CHALLENGE_LIFETIME, $seconds, Module::MODULE_ID);
     }
 
     protected function setUserTwoFA(AcceptanceTester $I, bool $state): void

@@ -12,6 +12,7 @@ namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\EventSubsc
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
 use OxidEsales\GraphQL\Base\DataType\UserInterface;
 use OxidEsales\GraphQL\Base\Event\BeforeTokenCreation;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettingsInterface;
 use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
 use OxidEsales\SecurityModule\GraphQL\Authentication\EventSubscriber\BeforeTokenCreationSubscriber;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,17 +21,31 @@ use PHPUnit\Framework\TestCase;
 class BeforeTokenCreationSubscriberTest extends TestCase
 {
     #[Test]
-    public function stampsMfaPendingClaimWhenUserIsTwoFAPending(): void
+    public function stampsPendingAndConfiguredExpiryClaimsWhenUserIsTwoFAPending(): void
     {
+        $lifetime = 120;
         $pendingUser = new TwoFAPendingUser($this->createStub(EshopUserModel::class));
 
+        $stampedClaims = [];
         $eventMock = $this->createMock(BeforeTokenCreation::class);
         $eventMock->method('getUser')->willReturn($pendingUser);
-        $eventMock->expects($this->once())
+        $eventMock->expects($this->exactly(2))
             ->method('withClaim')
-            ->with('mfa_pending', true);
+            ->willReturnCallback(
+                function (string $name, mixed $value) use (&$stampedClaims, $eventMock): BeforeTokenCreation {
+                    $stampedClaims[$name] = $value;
+                    return $eventMock;
+                }
+            );
 
-        $this->getSut()->onBeforeTokenCreation($eventMock);
+        $before = time();
+        $this->getSut(lifetime: $lifetime)->onBeforeTokenCreation($eventMock);
+        $after = time();
+
+        $this->assertTrue($stampedClaims['mfa_pending']);
+        // mfa_exp is now + the configured lifetime (allowing for a clock tick during the call).
+        $this->assertGreaterThanOrEqual($before + $lifetime, $stampedClaims['mfa_exp']);
+        $this->assertLessThanOrEqual($after + $lifetime, $stampedClaims['mfa_exp']);
     }
 
     #[Test]
@@ -54,8 +69,11 @@ class BeforeTokenCreationSubscriberTest extends TestCase
         );
     }
 
-    private function getSut(): BeforeTokenCreationSubscriber
+    private function getSut(int $lifetime = 300): BeforeTokenCreationSubscriber
     {
-        return new BeforeTokenCreationSubscriber();
+        $settingsStub = $this->createStub(TwoFAShopSettingsInterface::class);
+        $settingsStub->method('getApiChallengeLifetime')->willReturn($lifetime);
+
+        return new BeforeTokenCreationSubscriber(settings: $settingsStub);
     }
 }

@@ -32,11 +32,35 @@ final class VerifyTwoFactorTokenCest extends BaseCest
         $I->assertTrue($claims->get('useranonymous'), 'Challenge token must be anonymous');
         $I->assertSame($user['userId'], $claims->get('userid'), 'Challenge token keeps the real user id');
 
+        // Short, self-issued challenge window (default 300s) — far below the JWT's own (8h) exp.
+        $now = time();
+        $mfaExp = (int)$claims->get('mfa_exp');
+        $I->assertGreaterThan($now, $mfaExp, 'Challenge expiry must be in the future');
+        $I->assertLessThanOrEqual($now + 300, $mfaExp, 'Default challenge lifetime is 5 minutes');
+        $I->assertLessThan(
+            $claims->get('exp')->getTimestamp(),
+            $mfaExp,
+            'Challenge expiry must be far shorter than the full token exp'
+        );
+
         $I->seeInDatabase('oesm_2fa_otp', ['OXUSERID' => $user['userId']]);
         // The OTP email actually went out to this user, carrying a 6-digit code.
         $I->openRecentEmail();
         $I->seeInEmailTo($user['userLoginName']);
         $I->assertMatchesRegularExpression('/^\d{6}$/', $this->grabOtpFromEmail($I));
+    }
+
+    public function challengeLifetimeIsDrivenByTheModuleSetting(AcceptanceTester $I): void
+    {
+        $this->prepareTwoFAChallengeUser($I);
+        $this->setApiChallengeLifetime(60); // override the default 5 minutes
+
+        $now = time();
+        $challenge = $this->requestChallengeToken($I);
+
+        $mfaExp = (int)$this->claimsOf($I, $challenge)->get('mfa_exp');
+        $I->assertGreaterThan($now, $mfaExp);
+        $I->assertLessThanOrEqual($now + 60, $mfaExp, 'mfa_exp must honour the configured 60s lifetime');
     }
 
     public function challengeTokenIsRejectedOnALoggedQuery(AcceptanceTester $I): void

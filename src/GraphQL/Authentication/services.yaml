@@ -21,9 +21,12 @@ services:
 
   # Subscribes to graphql-base's BeforeTokenCreation. Safe when base absent: CORE
   # EventSubscriberInterface, event keyed by ::class (compile-time string, no autoload),
-  # no graphql-base constructor deps.
+  # no graphql-base constructor deps. The injected settings service is module-internal
+  # (always present), so it does not reintroduce a graphql-base compile-time dependency.
   OxidEsales\SecurityModule\GraphQL\Authentication\EventSubscriber\BeforeTokenCreationSubscriber:
     autowire: false
+    arguments:
+      $settings: '@OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettingsInterface'
     tags:
       - { name: kernel.event_subscriber }
 

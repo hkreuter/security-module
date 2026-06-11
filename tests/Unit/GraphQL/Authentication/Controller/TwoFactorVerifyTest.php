@@ -41,6 +41,7 @@ class TwoFactorVerifyTest extends TestCase
         $tokenStub->method('getTokenClaim')->willReturnCallback(
             fn(string $claim, mixed $default = null): mixed => match ($claim) {
                 'mfa_pending' => true,
+                'mfa_exp' => time() + 300,
                 Token::CLAIM_USERID => $userId,
                 default => $default,
             }
@@ -58,6 +59,28 @@ class TwoFactorVerifyTest extends TestCase
         );
 
         $this->assertSame($accessToken, $sut->verifyTwoFactorToken($otp));
+    }
+
+    #[Test]
+    public function verifyTwoFactorTokenThrowsAndSkipsVerifyWhenChallengeExpired(): void
+    {
+        $tokenStub = $this->createStub(Token::class);
+        $tokenStub->method('getTokenClaim')->willReturnCallback(
+            fn(string $claim, mixed $default = null): mixed => match ($claim) {
+                'mfa_pending' => true,
+                'mfa_exp' => time() - 1, // already expired
+                default => $default,
+            }
+        );
+
+        $twoFAServiceMock = $this->createMock(TwoFAServiceInterface::class);
+        $twoFAServiceMock->expects($this->never())->method('verify');
+
+        $sut = $this->getSut(tokenService: $tokenStub, twoFAService: $twoFAServiceMock);
+
+        $this->expectException(InvalidToken::class);
+
+        $sut->verifyTwoFactorToken(uniqid());
     }
 
     #[Test]
@@ -97,6 +120,7 @@ class TwoFactorVerifyTest extends TestCase
         $tokenStub->method('getTokenClaim')->willReturnCallback(
             fn(string $claim, mixed $default = null): mixed => match ($claim) {
                 'mfa_pending' => true,
+                'mfa_exp' => time() + 300,
                 Token::CLAIM_USERID => $userId,
                 default => $default,
             }
@@ -132,6 +156,35 @@ class TwoFactorVerifyTest extends TestCase
         $tokenStub = $this->createStub(Token::class);
         $tokenStub->method('getTokenClaim')->willReturnCallback(
             fn(string $claim, mixed $default = null): mixed => $claim === 'mfa_pending' ? false : $default
+        );
+
+        $refreshServiceMock = $this->createMock(RefreshTokenServiceInterface::class);
+        $refreshServiceMock->expects($this->never())->method('createRefreshTokenForUser');
+
+        $twoFAServiceMock = $this->createMock(TwoFAServiceInterface::class);
+        $twoFAServiceMock->expects($this->never())->method('verify');
+
+        $sut = $this->getSut(
+            tokenService: $tokenStub,
+            twoFAService: $twoFAServiceMock,
+            refreshTokenService: $refreshServiceMock,
+        );
+
+        $this->expectException(InvalidToken::class);
+
+        $sut->verifyTwoFactorLogin(uniqid());
+    }
+
+    #[Test]
+    public function verifyTwoFactorLoginThrowsAndIssuesNoRefreshTokenWhenChallengeExpired(): void
+    {
+        $tokenStub = $this->createStub(Token::class);
+        $tokenStub->method('getTokenClaim')->willReturnCallback(
+            fn(string $claim, mixed $default = null): mixed => match ($claim) {
+                'mfa_pending' => true,
+                'mfa_exp' => time() - 1, // already expired
+                default => $default,
+            }
         );
 
         $refreshServiceMock = $this->createMock(RefreshTokenServiceInterface::class);
