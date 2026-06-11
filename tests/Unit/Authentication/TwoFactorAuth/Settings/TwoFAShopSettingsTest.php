@@ -61,6 +61,20 @@ class TwoFAShopSettingsTest extends TestCase
     }
 
     #[Test]
+    public function getApiChallengeLifetimeReturnsConfiguredSeconds(): void
+    {
+        $seconds = mt_rand(1, 3600);
+        $moduleSettingServiceMock = $this->createMock(ModuleSettingServiceInterface::class);
+        $moduleSettingServiceMock->method('getInteger')
+            ->with(TwoFAShopSettings::API_CHALLENGE_LIFETIME, Module::MODULE_ID)
+            ->willReturn($seconds);
+
+        $sut = $this->getSut(moduleSettingService: $moduleSettingServiceMock);
+
+        $this->assertSame($seconds, $sut->getApiChallengeLifetime());
+    }
+
+    #[Test]
     public function getVerificationUrlReturnsVerificationControllerUrl(): void
     {
         $configStub = $this->createStub(Config::class);

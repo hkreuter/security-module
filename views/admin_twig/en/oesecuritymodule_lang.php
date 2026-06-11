@@ -33,4 +33,8 @@ $aLang = [
     'SHOP_MODULE_oeSecurityTwoFactorAuthType_otp'  => 'OTP',
     'SHOP_MODULE_oeSecurityTwoFactorAuthType_totp' => 'TOTP',
     'SHOP_MODULE_oeSecurityTwoFactorAuthType_both' => 'OTP and TOTP',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthApiChallengeLifetime'      => 'API 2FA challenge lifetime (seconds)',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthApiChallengeLifetime' => 'How long the short-lived '
+        . 'GraphQL API 2FA challenge token stays valid before the user must log in again. Should '
+        . 'cover the OTP validity window (default 300 seconds).',
 ];
