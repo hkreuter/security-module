@@ -57,18 +57,18 @@ class BeforeTokenCreationSubscriberTest extends TestCase
         $pendingUser = new TwoFAPendingUser($this->createStub(EshopUserModel::class));
 
         $stampedClaims = [];
-        $eventMock = $this->createMock(BeforeTokenCreation::class);
-        $eventMock->method('getUser')->willReturn($pendingUser);
-        $eventMock->method('withClaim')->willReturnCallback(
-            function (string $name, mixed $value) use (&$stampedClaims, $eventMock): BeforeTokenCreation {
+        $eventStub = $this->createStub(BeforeTokenCreation::class);
+        $eventStub->method('getUser')->willReturn($pendingUser);
+        $eventStub->method('withClaim')->willReturnCallback(
+            function (string $name, mixed $value) use (&$stampedClaims, $eventStub): BeforeTokenCreation {
                 $stampedClaims[$name] = $value;
-                return $eventMock;
+                return $eventStub;
             }
         );
 
         $before = time();
         $this->getSut(apiChallengeLifetime: $apiLifetime, otpCodeLifetime: $otpLifetime)
-            ->onBeforeTokenCreation($eventMock);
+            ->onBeforeTokenCreation($eventStub);
         $after = time();
 
         $this->assertGreaterThanOrEqual($before + $otpLifetime, $stampedClaims['mfa_exp']);
@@ -83,18 +83,18 @@ class BeforeTokenCreationSubscriberTest extends TestCase
         $pendingUser = new TwoFAPendingUser($this->createStub(EshopUserModel::class));
 
         $stampedClaims = [];
-        $eventMock = $this->createMock(BeforeTokenCreation::class);
-        $eventMock->method('getUser')->willReturn($pendingUser);
-        $eventMock->method('withClaim')->willReturnCallback(
-            function (string $name, mixed $value) use (&$stampedClaims, $eventMock): BeforeTokenCreation {
+        $eventStub = $this->createStub(BeforeTokenCreation::class);
+        $eventStub->method('getUser')->willReturn($pendingUser);
+        $eventStub->method('withClaim')->willReturnCallback(
+            function (string $name, mixed $value) use (&$stampedClaims, $eventStub): BeforeTokenCreation {
                 $stampedClaims[$name] = $value;
-                return $eventMock;
+                return $eventStub;
             }
         );
 
         $before = time();
         $this->getSut(apiChallengeLifetime: $apiLifetime, otpCodeLifetime: $otpLifetime)
-            ->onBeforeTokenCreation($eventMock);
+            ->onBeforeTokenCreation($eventStub);
         $after = time();
 
         $this->assertGreaterThanOrEqual($before + $apiLifetime, $stampedClaims['mfa_exp']);
