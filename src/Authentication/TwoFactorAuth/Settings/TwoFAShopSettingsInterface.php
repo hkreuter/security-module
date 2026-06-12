@@ -17,6 +17,8 @@ interface TwoFAShopSettingsInterface
 
     public function getApiChallengeLifetime(): int;
 
+    public function getOtpCodeLifetime(): int;
+
     public function getVerificationUrl(): string;
 
     public function getAccountUrl(): string;

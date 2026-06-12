@@ -13,12 +13,14 @@ use DateTimeImmutable;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\DTO\OtpChallengeStateInterface;
 // phpcs:ignore Generic.Files.LineLength
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Infrastructure\Repository\OtpChallengeStateRepositoryInterface;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettingsInterface;
 
 class OtpChallengeStateService implements OtpChallengeStateServiceInterface
 {
     public function __construct(
         private OtpChallengeStateRepositoryInterface $stateRepository,
         private OtpCodeHasherServiceInterface $codeHasher,
+        private TwoFAShopSettingsInterface $settings,
     ) {
     }
 
@@ -29,8 +31,7 @@ class OtpChallengeStateService implements OtpChallengeStateServiceInterface
 
     public function createChallengeState(string $userId, #[\SensitiveParameter] string $code): void
     {
-        // todo-medium: get expiration from settings, test should be improved also to check the value given to repo
-        $expiresAt = new DateTimeImmutable('+5 minutes');
+        $expiresAt = $this->buildExpiresAt();
         $codeHash = $this->codeHasher->hash($code);
 
         $this->stateRepository->createChallengeState($userId, $codeHash, $expiresAt);
@@ -39,11 +40,15 @@ class OtpChallengeStateService implements OtpChallengeStateServiceInterface
     // todo-high: challenge if we want this second method to exist.
     public function refreshChallengeState(string $userId, #[\SensitiveParameter] string $code): void
     {
-        // todo-medium: get expiration from settings, test should be improved also to check the value given to repo
-        $expiresAt = new DateTimeImmutable('+5 minutes');
+        $expiresAt = $this->buildExpiresAt();
         $codeHash = $this->codeHasher->hash($code);
 
         $this->stateRepository->refreshChallengeState($userId, $codeHash, $expiresAt);
+    }
+
+    private function buildExpiresAt(): DateTimeImmutable
+    {
+        return new DateTimeImmutable(sprintf('+%d seconds', $this->settings->getOtpCodeLifetime()));
     }
 
     public function markVerified(string $userId): void

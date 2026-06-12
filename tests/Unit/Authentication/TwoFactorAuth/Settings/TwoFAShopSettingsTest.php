@@ -75,6 +75,20 @@ class TwoFAShopSettingsTest extends TestCase
     }
 
     #[Test]
+    public function getOtpCodeLifetimeReturnsConfiguredSeconds(): void
+    {
+        $seconds = mt_rand(1, 3600);
+        $moduleSettingServiceMock = $this->createMock(ModuleSettingServiceInterface::class);
+        $moduleSettingServiceMock->method('getInteger')
+            ->with(TwoFAShopSettings::OTP_CODE_LIFETIME, Module::MODULE_ID)
+            ->willReturn($seconds);
+
+        $sut = $this->getSut(moduleSettingService: $moduleSettingServiceMock);
+
+        $this->assertSame($seconds, $sut->getOtpCodeLifetime());
+    }
+
+    #[Test]
     public function getVerificationUrlReturnsVerificationControllerUrl(): void
     {
         $configStub = $this->createStub(Config::class);

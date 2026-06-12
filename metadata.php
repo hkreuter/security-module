@@ -135,5 +135,12 @@ $aModule = [
             'type'  => 'num',
             'value' => 300
         ],
+        [
+            // Lifetime (seconds) of the emailed OTP code. Upper bound for the API challenge lifetime.
+            'group' => 'two_factor_auth',
+            'name'  => TwoFactorAuthModuleSettings::OTP_CODE_LIFETIME,
+            'type'  => 'num',
+            'value' => 300
+        ],
     ],
 ];

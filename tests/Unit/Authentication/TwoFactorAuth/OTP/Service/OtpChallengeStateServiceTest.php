@@ -15,6 +15,7 @@ use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\DTO\OtpChallengeS
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Infrastructure\Repository\OtpChallengeStateRepositoryInterface;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Service\OtpChallengeStateService;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Service\OtpCodeHasherServiceInterface;
+use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettingsInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -39,6 +40,7 @@ class OtpChallengeStateServiceTest extends TestCase
     #[Test]
     public function createChallengeStateHashesCodeAndPassesToRepository(): void
     {
+        $lifetime = 120;
         $hasherMock = $this->createMock(OtpCodeHasherServiceInterface::class);
         $hasherMock->expects($this->once())
             ->method('hash')
@@ -51,10 +53,10 @@ class OtpChallengeStateServiceTest extends TestCase
             ->with(
                 $userId = uniqid(),
                 $codeHash,
-                $this->callback(fn(DateTimeImmutable $expiresAt) => $expiresAt > new DateTimeImmutable())
+                $this->callback($this->expiresAtIsAround($lifetime))
             );
 
-        $sut = $this->getSut(repository: $repositorySpy, hasher: $hasherMock);
+        $sut = $this->getSut(repository: $repositorySpy, hasher: $hasherMock, otpCodeLifetime: $lifetime);
 
         $sut->createChallengeState(userId: $userId, code: $code);
     }
@@ -62,6 +64,7 @@ class OtpChallengeStateServiceTest extends TestCase
     #[Test]
     public function refreshChallengeStateHashesCodeAndPassesToRepository(): void
     {
+        $lifetime = 120;
         $hasherMock = $this->createMock(OtpCodeHasherServiceInterface::class);
         $hasherMock->expects($this->once())
             ->method('hash')
@@ -74,12 +77,26 @@ class OtpChallengeStateServiceTest extends TestCase
             ->with(
                 $userId = uniqid(),
                 $codeHash,
-                $this->callback(fn(DateTimeImmutable $expiresAt) => $expiresAt > new DateTimeImmutable())
+                $this->callback($this->expiresAtIsAround($lifetime))
             );
 
-        $sut = $this->getSut(repository: $repositorySpy, hasher: $hasherMock);
+        $sut = $this->getSut(repository: $repositorySpy, hasher: $hasherMock, otpCodeLifetime: $lifetime);
 
         $sut->refreshChallengeState(userId: $userId, code: $code);
+    }
+
+    /**
+     * Predicate factory: expiresAt is now() + $lifetime seconds, allowing for a clock tick
+     * during the call.
+     */
+    private function expiresAtIsAround(int $lifetime): callable
+    {
+        $before = (new DateTimeImmutable())->getTimestamp();
+        return function (DateTimeImmutable $expiresAt) use ($lifetime, $before): bool {
+            $after = (new DateTimeImmutable())->getTimestamp();
+            $stamp = $expiresAt->getTimestamp();
+            return $stamp >= $before + $lifetime && $stamp <= $after + $lifetime;
+        };
     }
 
     #[Test]
@@ -124,10 +141,15 @@ class OtpChallengeStateServiceTest extends TestCase
     private function getSut(
         OtpChallengeStateRepositoryInterface $repository = null,
         OtpCodeHasherServiceInterface $hasher = null,
+        int $otpCodeLifetime = 300,
     ): OtpChallengeStateService {
+        $settingsStub = $this->createStub(TwoFAShopSettingsInterface::class);
+        $settingsStub->method('getOtpCodeLifetime')->willReturn($otpCodeLifetime);
+
         return new OtpChallengeStateService(
             stateRepository: $repository ?? $this->createStub(OtpChallengeStateRepositoryInterface::class),
             codeHasher: $hasher ?? $this->createStub(OtpCodeHasherServiceInterface::class),
+            settings: $settingsStub,
         );
     }
 }

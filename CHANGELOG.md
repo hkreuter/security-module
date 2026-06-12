@@ -6,9 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.0] - Unreleased
 
+### Added
+- Configurable OTP code lifetime via `oeSecurityTwoFactorAuthOtpCodeLifetime`
+  (default 300 seconds). Replaces the previous hardcoded 5-minute value
+  in `OtpChallengeStateService`. Applies to both the storefront/admin
+  and API 2FA flows.
+- Admin help texts for the four `two_factor_auth` module settings
+  (`Enabled`, `Type`, `ApiChallengeLifetime`, `OtpCodeLifetime`) in
+  English and German.
+
 ### Changed
 - Updated to work with OXID eShop 7.5.x
 - Minimum PHP version is now 8.3, tested with up to PHP 8.5
+- The API 2FA challenge JWT's `mfa_exp` claim is now clamped to
+  `min(ApiChallengeLifetime, OtpCodeLifetime)`. An operator who sets
+  `ApiChallengeLifetime > OtpCodeLifetime` gets the effective shorter
+  lifetime rather than a Bearer that outlives the underlying OTP.
 
 ## [3.0.0] - 2026-05-12
 

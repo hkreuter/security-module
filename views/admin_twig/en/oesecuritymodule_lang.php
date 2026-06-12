@@ -27,14 +27,24 @@ $aLang = [
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_15min' => '15 min',
     'SHOP_MODULE_oeSecurityCaptchaLifeTime_30min' => '30 min',
 
-    'SHOP_MODULE_GROUP_two_factor_auth'            => 'Two Factor Authentication',
-    'SHOP_MODULE_oeSecurityTwoFactorAuthEnabled'   => 'Enable Two Factor Authentication',
-    'SHOP_MODULE_oeSecurityTwoFactorAuthType'      => 'Two Factor Authentication type',
-    'SHOP_MODULE_oeSecurityTwoFactorAuthType_otp'  => 'OTP',
-    'SHOP_MODULE_oeSecurityTwoFactorAuthType_totp' => 'TOTP',
-    'SHOP_MODULE_oeSecurityTwoFactorAuthType_both' => 'OTP and TOTP',
+    'SHOP_MODULE_GROUP_two_factor_auth'                 => 'Two Factor Authentication',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthEnabled'        => 'Enable Two Factor Authentication',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthEnabled'   => 'Enable two-factor authentication shop-wide. '
+        . 'When active, users who have 2FA enabled on their account must verify a code during login.',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthType'           => 'Two Factor Authentication type',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthType'      => 'Method used to deliver the second factor. '
+        . 'Currently only "otp" (one-time password sent by email) is supported. TOTP (authenticator-app) '
+        . 'is planned for a future release.',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthType_otp'       => 'OTP',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthType_totp'      => 'TOTP',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthType_both'      => 'OTP and TOTP',
     'SHOP_MODULE_oeSecurityTwoFactorAuthApiChallengeLifetime'      => 'API 2FA challenge lifetime (seconds)',
-    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthApiChallengeLifetime' => 'How long the short-lived '
-        . 'GraphQL API 2FA challenge token stays valid before the user must log in again. Should '
-        . 'cover the OTP validity window (default 300 seconds).',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthApiChallengeLifetime' => 'How long an API 2FA challenge '
+        . 'Bearer remains exchangeable for a full access token, in seconds. The effective lifetime '
+        . 'is automatically capped at the OTP code lifetime (see below) — a Bearer is never useful '
+        . 'longer than the OTP itself. Default: 300 (5 minutes).',
+    'SHOP_MODULE_oeSecurityTwoFactorAuthOtpCodeLifetime'      => 'OTP code lifetime (seconds)',
+    'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthOtpCodeLifetime' => 'How long an emailed OTP code remains '
+        . 'valid, in seconds. Applies to both the storefront/admin and API 2FA flows. Acts as the '
+        . 'upper bound for the API challenge lifetime above. Default: 300 (5 minutes).',
 ];
