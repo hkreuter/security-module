@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.0.0] - Unreleased
 
 ### Added
+- Two-factor authentication for the OXAPI: `login` / `token` queries issue a
+  short-lived challenge token for 2FA-enabled users; `verifyTwoFactorLogin` /
+  `verifyTwoFactorToken` mutations exchange a valid OTP for full access (and
+  refresh) tokens. Requires `oxid-esales/graphql-base`.
+- Module setting `oeSecurityTwoFactorAuthApiChallengeLifetime` (default 300s)
+  controls the API challenge token's exchange window.
 - Configurable OTP code lifetime via `oeSecurityTwoFactorAuthOtpCodeLifetime`
   (default 300 seconds). Replaces the previous hardcoded 5-minute value
   in `OtpChallengeStateService`. Applies to both the storefront/admin
@@ -18,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated to work with OXID eShop 7.5.x
 - Minimum PHP version is now 8.3, tested with up to PHP 8.5
+- Failed OXAPI 2FA verifications now surface as a client-aware GraphQL error
+  (`Invalid or expired two-factor code`) instead of `Internal server error`.
 - The API 2FA challenge JWT's `mfa_exp` claim is now clamped to
   `min(ApiChallengeLifetime, OtpCodeLifetime)`. An operator who sets
   `ApiChallengeLifetime > OtpCodeLifetime` gets the effective shorter
