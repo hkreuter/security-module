@@ -3,6 +3,13 @@ name: Manual trigger
 on:
   workflow_dispatch:
     inputs:
+      scenario:
+        type: choice
+        options:
+          - 'module-security-ce'
+          - 'module-security-ce-oxapi'
+        default: 'module-security-ce-oxapi'
+        description: 'Scenario (with or without OXAPI)'
       limit:
         type: choice
         options:
@@ -48,7 +55,7 @@ jobs:
           esac
 
           # shellcheck disable=SC2088
-          TESTPLAN="~/defaults/7.5.x.yaml,${LIMIT}~/module-security-ce.yaml"
+          TESTPLAN="~/defaults/7.5.x.yaml,${LIMIT}~/${{inputs.scenario}}.yaml"
           echo "testplan=${TESTPLAN}" | tee -a "${GITHUB_OUTPUT}"
 
   dispatch_stable:
