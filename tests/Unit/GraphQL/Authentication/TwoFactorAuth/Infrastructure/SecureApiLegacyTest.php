@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\Infrastructure;
+namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\TwoFactorAuth\Infrastructure;
 
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
@@ -16,8 +16,8 @@ use OxidEsales\GraphQL\Base\DataType\User;
 use OxidEsales\GraphQL\Base\Exception\InvalidLogin;
 use OxidEsales\GraphQL\Base\Infrastructure\Legacy;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\TwoFactorRequiredException;
-use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
-use OxidEsales\SecurityModule\GraphQL\Authentication\Infrastructure\SecureApiLegacy;
+use OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Infrastructure\SecureApiLegacy;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -26,9 +26,11 @@ class SecureApiLegacyTest extends TestCase
     #[Test]
     public function loginReturnsTwoFAPendingUserWhenTwoFactorRequired(): void
     {
+        $userId = uniqid();
         $userModelStub = $this->createStub(EshopUserModel::class);
         $userModelStub->method('login')
             ->willThrowException(new TwoFactorRequiredException(uniqid(), uniqid()));
+        $userModelStub->method('getId')->willReturn($userId);
 
         $innerStub = $this->createStub(Legacy::class);
         $innerStub->method('getUserModel')->willReturn($userModelStub);
@@ -38,7 +40,7 @@ class SecureApiLegacyTest extends TestCase
         $result = $sut->login(uniqid(), uniqid());
 
         $this->assertInstanceOf(TwoFAPendingUser::class, $result);
-        $this->assertSame($userModelStub, $result->getEshopModel());
+        $this->assertSame($userId, (string)$result->id()->val());
     }
 
     #[Test]

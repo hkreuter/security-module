@@ -7,23 +7,21 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\GraphQL\Authentication\EventSubscriber;
+namespace OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\EventSubscriber;
 
 use DateTimeImmutable;
 use OxidEsales\GraphQL\Base\Event\BeforeTokenCreation;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettingsInterface;
-use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\DataType\TwoFAPendingUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Stamps the 2FA-challenge claims onto the JWT when the API login produced a TwoFAPendingUser:
  *  - `mfa_pending` marks it as a challenge token the verifyTwoFactor* mutations exchange for a
  *    full token once the OTP is verified;
- *  - `mfa_exp` gives the challenge a short, resend-independent lifetime that TwoFactorVerify
- *    enforces. The effective lifetime is `min(ApiChallengeLifetime, OtpCodeLifetime)` — the
- *    Bearer is never useful longer than the OTP itself, so we clamp here rather than letting
- *    operators misconfigure a Bearer that outlives the underlying OTP and produces confusing
- *    "expired" errors mid-verify.
+ *  - `mfa_exp` gives the challenge a short, resend-independent lifetime that the verify controller
+ *    enforces. The window comes from TwoFAShopSettings::getEffectiveChallengeLifetime() (which
+ *    clamps it so the Bearer never outlives the OTP it gates).
  *    graphql-base bakes the JWT `exp` (default 8h) before this event and the event only lets us
  *    ADD claims (no expiry override), so we cannot shorten `exp` itself — instead we bound the
  *    challenge's only capability (the verify exchange) with our own expiry claim.
@@ -52,11 +50,8 @@ final class BeforeTokenCreationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $lifetime = min(
-            $this->settings->getApiChallengeLifetime(),
-            $this->settings->getOtpCodeLifetime(),
-        );
-        $challengeExpiresAt = (new DateTimeImmutable())->getTimestamp() + $lifetime;
+        $challengeExpiresAt = (new DateTimeImmutable())->getTimestamp()
+            + $this->settings->getEffectiveChallengeLifetime();
 
         $event->withClaim('mfa_pending', true);
         $event->withClaim('mfa_exp', $challengeExpiresAt);

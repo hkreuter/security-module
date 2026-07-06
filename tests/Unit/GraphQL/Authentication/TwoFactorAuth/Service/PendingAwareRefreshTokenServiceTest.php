@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\Service;
+namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\TwoFactorAuth\Service;
 
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
 use OxidEsales\GraphQL\Base\DataType\UserInterface;
 use OxidEsales\GraphQL\Base\Service\RefreshTokenServiceInterface;
-use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
-use OxidEsales\SecurityModule\GraphQL\Authentication\Service\PendingAwareRefreshTokenService;
+use OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Service\PendingAwareRefreshTokenService;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

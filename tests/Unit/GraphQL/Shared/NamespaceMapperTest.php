@@ -20,7 +20,7 @@ class NamespaceMapperTest extends TestCase
     {
         $mapping = $this->getSut()->getControllerNamespaceMapping();
 
-        $namespace = '\\OxidEsales\\SecurityModule\\GraphQL\\Authentication\\Controller';
+        $namespace = '\\OxidEsales\\SecurityModule\\GraphQL\\Authentication\\TwoFactorAuth\\Controller';
         $this->assertArrayHasKey($namespace, $mapping);
         $this->assertDirectoryExists($mapping[$namespace]);
     }
@@ -30,7 +30,7 @@ class NamespaceMapperTest extends TestCase
     {
         $mapping = $this->getSut()->getTypeNamespaceMapping();
 
-        $namespace = '\\OxidEsales\\SecurityModule\\GraphQL\\Authentication\\DataType';
+        $namespace = '\\OxidEsales\\SecurityModule\\GraphQL\\Authentication\\TwoFactorAuth\\DataType';
         $this->assertArrayHasKey($namespace, $mapping);
         $this->assertDirectoryExists($mapping[$namespace]);
     }

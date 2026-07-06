@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\Exception;
+namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\TwoFactorAuth\Exception;
 
 use Exception;
 use OxidEsales\GraphQL\Base\Exception\ErrorCategories;
-use OxidEsales\SecurityModule\GraphQL\Authentication\Exception\TwoFactorChallengeException;
+use OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Exception\TwoFactorChallengeException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

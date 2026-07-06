@@ -26,14 +26,16 @@ final class NamespaceMapper
     public function getControllerNamespaceMapping(): array
     {
         return [
-            self::SPACE . 'Authentication\\Controller' => __DIR__ . '/../Authentication/Controller/',
+            self::SPACE . 'Authentication\\TwoFactorAuth\\Controller'
+                => __DIR__ . '/../Authentication/TwoFactorAuth/Controller/',
         ];
     }
 
     public function getTypeNamespaceMapping(): array
     {
         return [
-            self::SPACE . 'Authentication\\DataType' => __DIR__ . '/../Authentication/DataType/',
+            self::SPACE . 'Authentication\\TwoFactorAuth\\DataType'
+                => __DIR__ . '/../Authentication/TwoFactorAuth/DataType/',
         ];
     }
 }

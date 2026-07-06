@@ -1,5 +1,5 @@
 imports:
-  - { resource: Authentication/services.yaml }
+  - { resource: Authentication/TwoFactorAuth/services.yaml }
 
 services:
   _defaults:

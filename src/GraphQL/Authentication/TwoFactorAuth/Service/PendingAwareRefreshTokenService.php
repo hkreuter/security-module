@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\GraphQL\Authentication\Service;
+namespace OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Service;
 
 use OxidEsales\GraphQL\Base\DataType\UserInterface;
 use OxidEsales\GraphQL\Base\Service\RefreshTokenServiceInterface;
-use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\DataType\TwoFAPendingUser;
 
 /**
  * Decorates graphql-base's RefreshTokenService so a user mid-2FA-challenge never receives a

@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\GraphQL\Authentication\DataType;
+namespace OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\DataType;
 
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
 use OxidEsales\GraphQL\Base\DataType\UserInterface;
@@ -25,11 +25,6 @@ final class TwoFAPendingUser implements UserInterface
 {
     public function __construct(private readonly EshopUserModel $userModel)
     {
-    }
-
-    public function getEshopModel(): EshopUserModel
-    {
-        return $this->userModel;
     }
 
     public function email(): string

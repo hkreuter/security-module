@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\GraphQL\Authentication\Infrastructure;
+namespace OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Infrastructure;
 
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
@@ -17,7 +17,7 @@ use OxidEsales\GraphQL\Base\DataType\UserInterface;
 use OxidEsales\GraphQL\Base\Exception\InvalidLogin;
 use OxidEsales\GraphQL\Base\Infrastructure\Legacy;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Exception\TwoFactorRequiredException;
-use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\DataType\TwoFAPendingUser;
 
 /**
  * Decorates graphql-base's Legacy so the oxapi login flow can enforce 2FA.
@@ -47,8 +47,8 @@ final class SecureApiLegacy extends Legacy
                 $user->login($username, $password);
             } catch (TwoFactorRequiredException) {
                 return new TwoFAPendingUser($user);
-            } catch (Exception) {
-                throw new InvalidLogin('Username/password combination is invalid');
+            } catch (Exception $exception) {
+                throw new InvalidLogin('Username/password combination is invalid', previous: $exception);
             }
 
             return new User($user, false);

@@ -6,14 +6,14 @@ services:
   # registered (graphql-base absent), decoration_on_invalid: ignore drops this decorator, and
   # autowire: false keeps the class from being reflected/autoloaded at compile time — so the
   # shop-wide container still compiles cleanly without graphql-base.
-  OxidEsales\SecurityModule\GraphQL\Authentication\Infrastructure\SecureApiLegacy:
+  OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Infrastructure\SecureApiLegacy:
     decorates: OxidEsales\GraphQL\Base\Infrastructure\Legacy
     decoration_on_invalid: ignore
     autowire: false
     arguments: ['@.inner']
 
   # Same fail-safe pattern: never hand a usable refresh token to a 2FA-pending user.
-  OxidEsales\SecurityModule\GraphQL\Authentication\Service\PendingAwareRefreshTokenService:
+  OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Service\PendingAwareRefreshTokenService:
     decorates: OxidEsales\GraphQL\Base\Service\RefreshTokenServiceInterface
     decoration_on_invalid: ignore
     autowire: false
@@ -23,23 +23,32 @@ services:
   # EventSubscriberInterface, event keyed by ::class (compile-time string, no autoload),
   # no graphql-base constructor deps. The injected settings service is module-internal
   # (always present), so it does not reintroduce a graphql-base compile-time dependency.
-  OxidEsales\SecurityModule\GraphQL\Authentication\EventSubscriber\BeforeTokenCreationSubscriber:
+  OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\EventSubscriber\BeforeTokenCreationSubscriber:
     autowire: false
     arguments:
       $settings: '@OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettingsInterface'
     tags:
       - { name: kernel.event_subscriber }
 
-  # The verify mutations (discovered via Shared\NamespaceMapper -> Authentication/Controller/).
+  # Extracted challenge-token validation used by the verify controller. graphql-base's Token is
+  # injected optionally (@?) with the same fail-safe rationale as the controller below.
+  OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Service\ChallengeTokenValidatorServiceInterface:
+    class: OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Service\ChallengeTokenValidatorService
+    autowire: false
+    arguments:
+      $tokenService: '@?OxidEsales\GraphQL\Base\Service\Token'
+
+  # The verify mutations (discovered via Shared\NamespaceMapper -> Authentication/TwoFactorAuth/Controller/).
   # Fail-safe: graphql-base deps are injected optionally (@?) so the shop-wide container compiles
   # when graphql-base is absent (the controller's hard typehints would otherwise break the
   # CheckExceptionOnInvalidReferenceBehaviorPass). When absent the deps resolve to null, the
   # controller is never instantiated (schema not built), and its accessors throw if ever reached.
-  OxidEsales\SecurityModule\GraphQL\Authentication\Controller\TwoFactorVerify:
+  OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Controller\TwoFactorAuthController:
     public: true
     autowire: false
     arguments:
       $twoFAService: '@OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFAServiceInterface'
+      $challengeValidator: '@OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\Service\ChallengeTokenValidatorServiceInterface'
       $tokenService: '@?OxidEsales\GraphQL\Base\Service\Token'
       $legacy: '@?OxidEsales\GraphQL\Base\Infrastructure\Legacy'
       $refreshTokenService: '@?OxidEsales\GraphQL\Base\Service\RefreshTokenServiceInterface'

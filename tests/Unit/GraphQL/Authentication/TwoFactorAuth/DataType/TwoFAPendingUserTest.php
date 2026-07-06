@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\DataType;
+namespace OxidEsales\SecurityModule\Tests\Unit\GraphQL\Authentication\TwoFactorAuth\DataType;
 
 use OxidEsales\Eshop\Application\Model\User as EshopUserModel;
-use OxidEsales\SecurityModule\GraphQL\Authentication\DataType\TwoFAPendingUser;
+use OxidEsales\SecurityModule\GraphQL\Authentication\TwoFactorAuth\DataType\TwoFAPendingUser;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -44,16 +44,6 @@ class TwoFAPendingUserTest extends TestCase
     public function isAnonymousAlwaysReturnsTrue(): void
     {
         $this->assertTrue($this->getSut()->isAnonymous());
-    }
-
-    #[Test]
-    public function getEshopModelReturnsTheWrappedModel(): void
-    {
-        $userModelStub = $this->createStub(EshopUserModel::class);
-
-        $sut = $this->getSut(userModel: $userModelStub);
-
-        $this->assertSame($userModelStub, $sut->getEshopModel());
     }
 
     private function getSut(?EshopUserModel $userModel = null): TwoFAPendingUser
