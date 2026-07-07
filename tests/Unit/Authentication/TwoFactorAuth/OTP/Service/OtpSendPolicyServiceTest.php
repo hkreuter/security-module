@@ -110,10 +110,17 @@ class OtpSendPolicyServiceTest extends TestCase
     #[Test]
     #[DataProvider('getCooldownRemainingWithStateDataProvider')]
     public function getCooldownRemainingReturnsExpectedValueWithState(
-        ?DateTimeImmutable $lastSentAt,
+        ?int $lastSentAtOffsetSeconds,
         int $expectedRemaining,
     ): void {
         $userId = uniqid();
+
+        // Build the timestamp here (at execution time), not in the data provider: PHPUnit
+        // collects all data providers up front, so a DateTimeImmutable frozen there drifts
+        // by however long the rest of the suite takes to reach this test.
+        $lastSentAt = $lastSentAtOffsetSeconds === null
+            ? null
+            : new DateTimeImmutable("-{$lastSentAtOffsetSeconds} seconds");
 
         $stateStub = $this->createStub(OtpChallengeStateInterface::class);
         $stateStub->method('getLastSentAt')->willReturn($lastSentAt);
@@ -133,8 +140,8 @@ class OtpSendPolicyServiceTest extends TestCase
     public static function getCooldownRemainingWithStateDataProvider(): Generator
     {
         yield 'null lastSentAt returns zero' => [null, 0];
-        yield 'cooldown passed returns zero' => [new DateTimeImmutable('-61 seconds'), 0];
-        yield 'cooldown active returns remaining seconds' => [new DateTimeImmutable('-30 seconds'), 30];
+        yield 'cooldown passed returns zero' => [61, 0];
+        yield 'cooldown active returns remaining seconds' => [30, 30];
     }
 
     private function getSut(
