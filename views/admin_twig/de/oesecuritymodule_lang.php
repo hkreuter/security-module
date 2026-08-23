@@ -49,4 +49,28 @@ $aLang = [
         . 'OTP-Code gültig bleibt, in Sekunden. Gilt sowohl für den Storefront/Admin- als auch für '
         . 'den API-2FA-Flow. Bildet die Obergrenze für die API-Challenge-Lebensdauer oben. '
         . 'Standard: 300 (5 Minuten).',
+
+    'SHOP_MODULE_GROUP_password_reuse'                          => 'Wiederverwendung von Passwörtern',
+    'SHOP_MODULE_oeSecurityPasswordReuseEnable'                 => 'Schutz vor Passwort-Wiederverwendung aktivieren',
+    'HELP_SHOP_MODULE_oeSecurityPasswordReuseEnable'            => 'Weist ein neues Passwort ab, wenn es '
+        . 'mit einem der zuletzt verwendeten Passwörter des Kontos übereinstimmt. Ist der Schutz '
+        . 'deaktiviert, findet keine Prüfung statt und die gespeicherte Passwort-Historie wird gelöscht. '
+        . 'Standardmäßig deaktiviert.',
+    'SHOP_MODULE_oeSecurityPasswordChangeNotificationEnable'    => 'E-Mail-Benachrichtigung bei Passwortänderung aktivieren',
+    'HELP_SHOP_MODULE_oeSecurityPasswordChangeNotificationEnable' => 'Sendet dem betroffenen Konto nach '
+        . 'jeder erfolgreichen Passwortänderung oder -zurücksetzung eine Sicherheits-Benachrichtigung. '
+        . 'Standardmäßig deaktiviert.',
+    'SHOP_MODULE_oeSecurityPasswordReuseCustomerSize'           => 'Gemerkte Passwörter (Kundenkonten)',
+    'HELP_SHOP_MODULE_oeSecurityPasswordReuseCustomerSize'      => 'Wie viele der zuletzt verwendeten '
+        . 'Passwörter ein Kundenkonto nicht erneut verwenden darf (inklusive des aktuellen). Standard: 5.',
+    'SHOP_MODULE_oeSecurityPasswordReuseCustomerSize_3'         => '3',
+    'SHOP_MODULE_oeSecurityPasswordReuseCustomerSize_5'         => '5',
+    'SHOP_MODULE_oeSecurityPasswordReuseCustomerSize_10'        => '10',
+    'SHOP_MODULE_oeSecurityPasswordReuseAdminSize'              => 'Gemerkte Passwörter (Administratorkonten)',
+    'HELP_SHOP_MODULE_oeSecurityPasswordReuseAdminSize'         => 'Wie viele der zuletzt verwendeten '
+        . 'Passwörter ein Administratorkonto nicht erneut verwenden darf (inklusive des aktuellen). Wird '
+        . 'zur Laufzeit mindestens auf den Kundenwert angehoben. Standard: 10.',
+    'SHOP_MODULE_oeSecurityPasswordReuseAdminSize_5'            => '5',
+    'SHOP_MODULE_oeSecurityPasswordReuseAdminSize_10'           => '10',
+    'SHOP_MODULE_oeSecurityPasswordReuseAdminSize_24'           => '24',
 ];

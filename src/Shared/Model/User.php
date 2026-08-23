@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OxidEsales\SecurityModule\Shared\Model;
 
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFAUserServiceInterface;
+use OxidEsales\SecurityModule\PasswordReuse\Service\PasswordHistoryServiceInterface;
 
 /**
  * User model extended
@@ -30,6 +31,17 @@ class User extends User_parent
             if ($twoFAUserService->isTwoFARequired($userId) && !$twoFAUserService->isChallengeVerified($userId)) {
                 $twoFAUserService->startChallengeForUser($userId);
             }
+        }
+    }
+
+    /** @param string $sOXIDQuoted */
+    protected function deleteAdditionally($sOXIDQuoted): void
+    {
+        parent::deleteAdditionally($sOXIDQuoted);
+
+        $userId = trim((string)$sOXIDQuoted, "'");
+        if ($userId !== '') {
+            $this->getService(PasswordHistoryServiceInterface::class)->purgeForUser($userId);
         }
     }
 }

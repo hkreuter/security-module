@@ -8,9 +8,3 @@ services:
 
   OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\UserFactoryInterface:
     class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\UserFactory
-
-  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\EmailFactoryInterface:
-    class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\EmailFactory
-
-  OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\ContentModelFactoryInterface:
-    class: OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\ContentModelFactory

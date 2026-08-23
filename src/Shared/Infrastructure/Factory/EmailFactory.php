@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory;
+namespace OxidEsales\SecurityModule\Shared\Infrastructure\Factory;
 
 use OxidEsales\Eshop\Core\Email;
 

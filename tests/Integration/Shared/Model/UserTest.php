@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OxidEsales\SecurityModule\Tests\Integration\Shared\Model;
 
+use DateTimeImmutable;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\UserException;
 use OxidEsales\Eshop\Core\Registry;
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Service\TwoFAUserServiceInterface;
+use OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\PasswordHistoryRepositoryInterface;
 use OxidEsales\SecurityModule\Shared\Model\User as SecurityModuleUser;
 use OxidEsales\SecurityModule\Tests\Integration\IntegrationTestCase;
 
@@ -144,6 +146,52 @@ class UserTest extends IntegrationTestCase
 
         $result = $sut->login(self::TWO_FA_USER_NAME, self::TWO_FA_USER_PASSWORD);
         $this->assertTrue($result);
+    }
+
+    public function testDeleteRemovesPasswordHistoryOfDeletedUserOnly(): void
+    {
+        $historyRepository = $this->get(PasswordHistoryRepositoryInterface::class);
+
+        $deletedUserId = $this->createUser();
+        $survivingUserId = substr(uniqid('pwh', true), 0, 32);
+
+        $historyRepository->append($deletedUserId, 'old-1', new DateTimeImmutable('2026-01-01 10:00:00'));
+        $historyRepository->append($deletedUserId, 'old-2', new DateTimeImmutable('2026-01-02 10:00:00'));
+        $historyRepository->append($survivingUserId, 'keep', new DateTimeImmutable('2026-01-01 10:00:00'));
+
+        $this->assertSame(2, $historyRepository->countForUser($deletedUserId));
+
+        $user = oxNew(User::class);
+        $user->load($deletedUserId);
+        $this->assertTrue($user->delete());
+
+        $this->assertSame(
+            0,
+            $historyRepository->countForUser($deletedUserId),
+            'Deleting a user must purge all of its stored password history rows (BR016).'
+        );
+        $this->assertSame(
+            1,
+            $historyRepository->countForUser($survivingUserId),
+            'Deleting a user must not touch another accounts password history.'
+        );
+
+        $historyRepository->purgeForUser($survivingUserId);
+    }
+
+    private function createUser(): string
+    {
+        $userId = substr(uniqid('pwh', true), 0, 32);
+
+        $user = oxNew(User::class);
+        $user->setId($userId);
+        $user->assign([
+            'oxusername' => uniqid('mail_', true) . '@example.test',
+            'oxactive'   => 1,
+        ]);
+        $user->save();
+
+        return $userId;
     }
 
     private function getSut(array $serviceOverrides = []): SecurityModuleUser

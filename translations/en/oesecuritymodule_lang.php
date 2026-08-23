@@ -10,6 +10,9 @@ $sLangName = 'English';
 $aLang = [
     'charset' => 'UTF-8',
 
+    'OESECURITYMODULE_PASSWORD_RECENTLY_USED'    => 'This password was used recently. Please choose a different one.',
+    'OESECURITYMODULE_PASSWORD_REUSE_CHECK_FAILED' => 'Your password could not be changed right now. Please try again later.',
+
     'ERROR_PASSWORD_MIN_LENGTH'                => 'The password must be at least %d characters long.',
     'ERROR_PASSWORD_MISSING_DIGIT'             => 'The password does not contain a number.',
     'ERROR_PASSWORD_MISSING_LOWER_CASE'        => 'The password does not contain a lower case letter.',
@@ -49,6 +52,13 @@ $aLang = [
         . "This code expires in %d minutes and can only be used once.\n\n"
         . "If you didn't try to log in, you can safely ignore this email — but we'd recommend"
         . " changing your password just to be safe.\n\n"
+        . "Your OXID eShop team.",
+
+    'OESM_PASSWORDCHANGE_EMAIL_SUBJECT' => 'Your OXID eShop password was changed',
+    'OESM_PASSWORDCHANGE_EMAIL_BODY'    => "Hello,\n\n"
+        . "the password for your OXID eShop account was changed on %s.\n\n"
+        . "If you made this change, there is nothing more you need to do.\n\n"
+        . "If this wasn't you, please contact our support immediately and reset your password.\n\n"
         . "Your OXID eShop team.",
 
     'TWO_FACTOR_AUTHENTICATION_TITLE'       => 'Two Factor Authentication',

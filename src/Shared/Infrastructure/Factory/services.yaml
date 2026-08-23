@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  OxidEsales\SecurityModule\Shared\Infrastructure\Factory\EmailFactoryInterface:
+    class: OxidEsales\SecurityModule\Shared\Infrastructure\Factory\EmailFactory
+
+  OxidEsales\SecurityModule\Shared\Infrastructure\Factory\ContentModelFactoryInterface:
+    class: OxidEsales\SecurityModule\Shared\Infrastructure\Factory\ContentModelFactory

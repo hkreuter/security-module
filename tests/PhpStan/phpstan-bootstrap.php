@@ -36,3 +36,13 @@ class_alias(
     \OxidEsales\Eshop\Application\Controller\ForgotPasswordController::class,
     \OxidEsales\SecurityModule\Shared\Controller\ForgotPasswordController_parent::class
 );
+
+class_alias(
+    \OxidEsales\Eshop\Application\Controller\AccountPasswordController::class,
+    \OxidEsales\SecurityModule\Shared\Controller\AccountPasswordController_parent::class
+);
+
+class_alias(
+    \OxidEsales\Eshop\Application\Controller\Admin\UserMain::class,
+    \OxidEsales\SecurityModule\Shared\Controller\Admin\UserMain_parent::class
+);

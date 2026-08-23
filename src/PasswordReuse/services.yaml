@@ -1,0 +1,79 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    bind:
+      OxidEsales\Eshop\Core\Language: '@=service("OxidEsales\\SecurityModule\\Core\\Registry").getLang()'
+
+  OxidEsales\SecurityModule\PasswordReuse\Service\ModuleSettingsServiceInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Service\ModuleSettingsService
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\PasswordHistoryRepositoryInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\PasswordHistoryRepository
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Service\PasswordHistoryServiceInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Service\PasswordHistoryService
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\AccountRepositoryInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\AccountRepository
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Service\AccountTypeResolverInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Service\AccountTypeResolver
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Service\ConfirmedChangeRegistryInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Service\ConfirmedChangeRegistry
+    public: true
+    shared: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Hashing\PasswordHasherInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Hashing\PasswordHasher
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Service\PasswordCollectionServiceInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Service\PasswordCollectionService
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Service\PasswordReuseGuardServiceInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Service\PasswordReuseGuardService
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\StoredPasswordReaderInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\StoredPasswordReader
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Factory\UserModelFactoryInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Factory\UserModelFactory
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Time\ChangeClockInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Time\ChangeClock
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\PasswordChangeEmailContentRepositoryInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\PasswordChangeEmailContentRepository
+    public: true
+    arguments:
+      $contentFactory: '@OxidEsales\SecurityModule\Shared\Infrastructure\Factory\ContentModelFactoryInterface'
+
+  OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Email\PasswordChangeMailRendererInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Email\PasswordChangeMailRenderer
+    public: true
+    arguments:
+      $rendererBridge: '@OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateRendererBridgeInterface'
+
+  OxidEsales\SecurityModule\PasswordReuse\Notifier\Email\PasswordChangeEmailNotifierInterface:
+    class: OxidEsales\SecurityModule\PasswordReuse\Notifier\Email\PasswordChangeEmailNotifier
+    public: true
+
+  OxidEsales\SecurityModule\PasswordReuse\Subscriber\PasswordChangeSubscriber:
+    tags:
+      - { name: kernel.event_subscriber }
+
+  OxidEsales\SecurityModule\PasswordReuse\Subscriber\ReuseToggleSubscriber:
+    tags:
+      - { name: kernel.event_subscriber }

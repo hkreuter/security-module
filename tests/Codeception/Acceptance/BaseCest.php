@@ -15,6 +15,8 @@ use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServ
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettings;
 use OxidEsales\SecurityModule\Captcha\Service\ModuleSettingsService as CaptchaModuleSettingsService;
 use OxidEsales\SecurityModule\Core\Module;
+use OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Repository\PasswordHistoryRepositoryInterface;
+use OxidEsales\SecurityModule\PasswordReuse\Service\ModuleSettingsService as PasswordReuseModuleSettingsService;
 use OxidEsales\SecurityModule\Tests\Codeception\Support\AcceptanceTester;
 use OxidEsales\SecurityModule\PasswordPolicy\Service\ModuleSettingsServiceInterface as PasswordSettingsServiceInterface;
 
@@ -64,5 +66,28 @@ abstract class BaseCest
             ['OE2FAENABLED' => (int) $state],
             ['OXID' => $userData['userId']]
         );
+    }
+
+    protected function setReusePreventionState(bool $state): void
+    {
+        ContainerFacade::get(ModuleSettingServiceInterface::class)->saveBoolean(
+            PasswordReuseModuleSettingsService::REUSE_PREVENTION_ENABLE,
+            $state,
+            Module::MODULE_ID
+        );
+    }
+
+    protected function setNotificationState(bool $state): void
+    {
+        ContainerFacade::get(ModuleSettingServiceInterface::class)->saveBoolean(
+            PasswordReuseModuleSettingsService::CHANGE_NOTIFICATION_ENABLE,
+            $state,
+            Module::MODULE_ID
+        );
+    }
+
+    protected function clearPasswordHistory(string $userId): void
+    {
+        ContainerFacade::get(PasswordHistoryRepositoryInterface::class)->purgeForUser($userId);
     }
 }

@@ -11,6 +11,7 @@
 
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Settings\TwoFAShopSettings as TwoFactorAuthModuleSettings;
 use OxidEsales\SecurityModule\PasswordPolicy\Service\ModuleSettingsService as PasswordPolicyModuleSettings;
+use OxidEsales\SecurityModule\PasswordReuse\Service\ModuleSettingsService as PasswordReuseModuleSettings;
 use OxidEsales\SecurityModule\Captcha\Service\ModuleSettingsService as CaptchaModuleSettings;
 use OxidEsales\SecurityModule\Core\Module;
 
@@ -34,7 +35,9 @@ $aModule = [
     'extend'      => [
         \OxidEsales\Eshop\Application\Component\UserComponent::class => \OxidEsales\SecurityModule\Captcha\Shop\UserComponent::class,
         \OxidEsales\Eshop\Application\Controller\NewsletterController::class => \OxidEsales\SecurityModule\Captcha\Shop\NewsletterController::class,
+        \OxidEsales\Eshop\Application\Controller\AccountPasswordController::class => \OxidEsales\SecurityModule\Shared\Controller\AccountPasswordController::class,
         \OxidEsales\Eshop\Application\Controller\ForgotPasswordController::class => \OxidEsales\SecurityModule\Shared\Controller\ForgotPasswordController::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\UserMain::class => \OxidEsales\SecurityModule\Shared\Controller\Admin\UserMain::class,
         \OxidEsales\Eshop\Application\Model\User::class => \OxidEsales\SecurityModule\Shared\Model\User::class,
         \OxidEsales\Eshop\Core\InputValidator::class    => \OxidEsales\SecurityModule\Shared\Core\InputValidator::class,
         \OxidEsales\Eshop\Core\ViewConfig::class        => \OxidEsales\SecurityModule\Shared\Core\ViewConfig::class
@@ -141,6 +144,34 @@ $aModule = [
             'name'  => TwoFactorAuthModuleSettings::OTP_CODE_LIFETIME,
             'type'  => 'num',
             'value' => 300
+        ],
+
+        //Password reuse prevention + change notification (opt-in, off by default)
+        [
+            'group' => 'password_reuse',
+            'name'  => PasswordReuseModuleSettings::REUSE_PREVENTION_ENABLE,
+            'type'  => 'bool',
+            'value' => false
+        ],
+        [
+            'group' => 'password_reuse',
+            'name'  => PasswordReuseModuleSettings::CHANGE_NOTIFICATION_ENABLE,
+            'type'  => 'bool',
+            'value' => false
+        ],
+        [
+            'group' => 'password_reuse',
+            'name'  => PasswordReuseModuleSettings::CUSTOMER_COLLECTION_SIZE,
+            'type'  => 'select',
+            'constraints' => '3|5|10',
+            'value' => '5'
+        ],
+        [
+            'group' => 'password_reuse',
+            'name'  => PasswordReuseModuleSettings::ADMIN_COLLECTION_SIZE,
+            'type'  => 'select',
+            'constraints' => '5|10|24',
+            'value' => '10'
         ],
     ],
 ];

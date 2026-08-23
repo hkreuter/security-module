@@ -15,6 +15,13 @@ return [
         'userName'      => 'UserNamešÄßüл',
         'userLastName'  => 'UserSurnamešÄßüл',
     ],
+    'adminUser' => [
+        'userId'        => 'oxadmintest',
+        'userLoginName' => 'admin_test@oxid-esales.dev',
+        'userPassword'  => 'useruser',
+        'userName'      => 'John',
+        'userLastName'  => 'Doe',
+    ],
     'newUser' => [
         'loginData' => [
             'userLoginNameField' => 'new_test_user@oxid-esales.dev',

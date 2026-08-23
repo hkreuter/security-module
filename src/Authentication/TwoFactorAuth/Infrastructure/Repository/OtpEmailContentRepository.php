@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Repository;
 
-use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\ContentModelFactoryInterface;
+use OxidEsales\SecurityModule\Shared\Infrastructure\Factory\ContentModelFactoryInterface;
 
 class OtpEmailContentRepository implements OtpEmailContentRepositoryInterface
 {

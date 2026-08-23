@@ -50,7 +50,7 @@ final class ServiceAvailabilityTest extends IntegrationTestCase
             [\OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Transput\AuthCodeRequestInterface::class],
             [\OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Transput\JsonResponseInterface::class],
 
-            [\OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\EmailFactoryInterface::class],
+            [\OxidEsales\SecurityModule\Shared\Infrastructure\Factory\EmailFactoryInterface::class],
             [\OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\UserFactoryInterface::class],
             [\OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\UserModelFactoryInterface::class],
             [\OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Repository\UserRepositoryInterface::class],
@@ -64,6 +64,8 @@ final class ServiceAvailabilityTest extends IntegrationTestCase
             [\OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Service\OtpSendPolicyServiceInterface::class],
             [\OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Notifier\OtpNotifierInterface::class],
             [\OxidEsales\SecurityModule\Authentication\TwoFactorAuth\OTP\Notifier\Factory\OtpNotifierFactoryInterface::class],
+
+            [\OxidEsales\SecurityModule\PasswordReuse\Service\PasswordHistoryServiceInterface::class],
         ];
         // phpcs:enable
     }

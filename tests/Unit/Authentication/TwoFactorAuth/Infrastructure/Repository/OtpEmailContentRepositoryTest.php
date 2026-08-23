@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace OxidEsales\SecurityModule\Tests\Unit\Authentication\TwoFactorAuth\Infrastructure\Repository;
 
 use OxidEsales\Eshop\Application\Model\Content;
-use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Factory\ContentModelFactoryInterface;
+use OxidEsales\SecurityModule\Shared\Infrastructure\Factory\ContentModelFactoryInterface;
 use OxidEsales\SecurityModule\Authentication\TwoFactorAuth\Infrastructure\Repository\OtpEmailContentRepository;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

@@ -47,4 +47,26 @@ $aLang = [
     'HELP_SHOP_MODULE_oeSecurityTwoFactorAuthOtpCodeLifetime' => 'How long an emailed OTP code remains '
         . 'valid, in seconds. Applies to both the storefront/admin and API 2FA flows. Acts as the '
         . 'upper bound for the API challenge lifetime above. Default: 300 (5 minutes).',
+
+    'SHOP_MODULE_GROUP_password_reuse'                          => 'Password Reuse Prevention',
+    'SHOP_MODULE_oeSecurityPasswordReuseEnable'                 => 'Enable password reuse prevention',
+    'HELP_SHOP_MODULE_oeSecurityPasswordReuseEnable'            => 'Reject a new password that matches any '
+        . 'of the account\'s recently used passwords. When disabled, no reuse check runs and the stored '
+        . 'password history is purged. Off by default.',
+    'SHOP_MODULE_oeSecurityPasswordChangeNotificationEnable'    => 'Enable password change notification email',
+    'HELP_SHOP_MODULE_oeSecurityPasswordChangeNotificationEnable' => 'Send the affected account a security '
+        . 'notification email after every successful password change or reset. Off by default.',
+    'SHOP_MODULE_oeSecurityPasswordReuseCustomerSize'           => 'Remembered passwords (customer accounts)',
+    'HELP_SHOP_MODULE_oeSecurityPasswordReuseCustomerSize'      => 'How many recent passwords a customer '
+        . 'account may not reuse (including the current one). Default: 5.',
+    'SHOP_MODULE_oeSecurityPasswordReuseCustomerSize_3'         => '3',
+    'SHOP_MODULE_oeSecurityPasswordReuseCustomerSize_5'         => '5',
+    'SHOP_MODULE_oeSecurityPasswordReuseCustomerSize_10'        => '10',
+    'SHOP_MODULE_oeSecurityPasswordReuseAdminSize'              => 'Remembered passwords (admin accounts)',
+    'HELP_SHOP_MODULE_oeSecurityPasswordReuseAdminSize'         => 'How many recent passwords an admin '
+        . 'account may not reuse (including the current one). Treated as at least the customer value at '
+        . 'runtime. Default: 10.',
+    'SHOP_MODULE_oeSecurityPasswordReuseAdminSize_5'            => '5',
+    'SHOP_MODULE_oeSecurityPasswordReuseAdminSize_10'           => '10',
+    'SHOP_MODULE_oeSecurityPasswordReuseAdminSize_24'           => '24',
 ];
