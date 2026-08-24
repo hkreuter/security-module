@@ -59,6 +59,7 @@ final class PasswordReuseStorefrontChangeCest extends BaseCest
         $this->clearPasswordHistory($userData['userId']);
         $this->setReusePreventionState(false);
         $this->setNotificationState(false);
+        $this->setPasswordState(true);
 
         $I->deleteAllEmails();
     }

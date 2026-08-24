@@ -65,6 +65,7 @@ final class PasswordReuseNegativesCest extends BaseCest
         $this->clearPasswordHistory($userId);
         $this->setReusePreventionState(false);
         $this->setNotificationState(false);
+        $this->setPasswordState(true);
 
         $I->deleteAllEmails();
     }
