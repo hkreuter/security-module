@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - unreleased
+
+### Added
+- Password reuse prevention: a configurable "last N passwords" guard rejects reusing the
+  current or a recently used password on the My-Account change, forgot-password reset and
+  admin user-edit flows. Off by default (`oeSecurityPasswordReuseEnable`); remembered-count
+  is configurable per account type (`oeSecurityPasswordReuseCustomerSize`, default 5;
+  `oeSecurityPasswordReuseAdminSize`, default 10).
+- Password-change notification email (`oeSecurityPasswordChangeNotificationEnable`, off by
+  default): the account holder is notified when their password changes.
+- OXAPI enforcement: when `oxid-esales/graphql-storefront` is installed, the password policy
+  and reuse guard are applied to the `customerPasswordChange` and `customerPasswordReset`
+  mutations.
+
 ## [4.0.1] - 2026-08-20
 
 ### Fixed

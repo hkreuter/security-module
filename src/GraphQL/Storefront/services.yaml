@@ -1,0 +1,19 @@
+services:
+  _defaults:
+    public: false
+    autowire: false
+    autoconfigure: false
+
+  OxidEsales\SecurityModule\GraphQL\Storefront\Customer\Service\PasswordChangeGuardInterface:
+    class: OxidEsales\SecurityModule\GraphQL\Storefront\Customer\Service\PasswordChangeGuard
+    autowire: true
+
+  # Optional integration: dropped when graphql-storefront is absent (decoration_on_invalid: ignore).
+  OxidEsales\SecurityModule\GraphQL\Storefront\Customer\Service\GuardedPasswordService:
+    decorates: OxidEsales\GraphQL\Storefront\Customer\Service\PasswordInterface
+    decoration_on_invalid: ignore
+    arguments:
+      $inner: '@.inner'
+      $authentication: '@OxidEsales\GraphQL\Base\Service\Authentication'
+      $userModelFactory: '@OxidEsales\SecurityModule\PasswordReuse\Infrastructure\Factory\UserModelFactoryInterface'
+      $guard: '@OxidEsales\SecurityModule\GraphQL\Storefront\Customer\Service\PasswordChangeGuardInterface'

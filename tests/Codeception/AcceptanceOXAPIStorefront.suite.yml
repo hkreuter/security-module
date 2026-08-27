@@ -1,0 +1,50 @@
+# OXAPI password-security acceptance suite (graphql-storefront customer password mutations).
+actor: AcceptanceTester
+path: AcceptanceOXAPIStorefront
+bootstrap: _bootstrap.php
+
+modules:
+  enabled:
+    - Asserts
+    - \OxidEsales\SecurityModule\Tests\Codeception\Support\Helper\AcceptanceOxapiStorefront
+    - \OxidEsales\Codeception\Module\ShopSetup:
+        dump: '%DUMP_PATH%'
+        fixtures: '%FIXTURES_PATH%'
+        license: '%license_key%'
+    - Db:
+        dsn: 'mysql:host=%DB_HOST%;dbname=%DB_NAME%;charset=utf8'
+        user: '%DB_USERNAME%'
+        password: '%DB_PASSWORD%'
+        port: '%DB_PORT%'
+        dump: '%DUMP_PATH%'
+        module_dump: '%MODULE_DUMP_PATH%'
+        mysql_config: '%MYSQL_CONFIG_PATH%'
+        populate: true # run populator before all tests
+        cleanup: false # run populator before each test
+        populator: >
+          mysql --defaults-file=$mysql_config --default-character-set=utf8 $dbname < $dump
+          && mysql --defaults-file=$mysql_config --default-character-set=utf8 $dbname < $module_dump
+    - \OxidEsales\Codeception\Module\Database:
+        depends: Db
+    - \OxidEsales\Codeception\Module\SelectTheme:
+        theme_id: '%THEME_ID%'
+        depends:
+          - \OxidEsales\Codeception\Module\Database
+    - PhpBrowser:
+        url: '%SHOP_URL%'
+    - REST:
+        url: '%SHOP_URL%'
+        depends: PhpBrowser
+        part: Json
+    - \OxidEsales\Codeception\Module\OxideshopModules
+    - Mailpit:
+        url: '%MAIL_HOST%'
+        port: '%MAIL_WEB_PORT%'
+    - \OxidEsales\Codeception\Module\Email:
+        depends:
+          - Mailpit
+    - \OxidEsales\GraphQL\Base\Tests\Codeception\Module\AcceptanceHelper:
+        depends:
+          - REST
+step_decorators:
+    - \Codeception\Step\Retry

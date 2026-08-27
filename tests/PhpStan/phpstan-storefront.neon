@@ -6,9 +6,8 @@ parameters:
             identifier: catch.neverThrown
     bootstrapFiles:
         - phpstan-bootstrap.php
-    excludePaths:
-        - ../../src/GraphQL/Storefront
     level: 8
+    reportUnmatchedIgnoredErrors: false
     scanFiles:
         - ../../vendor/oxid-esales/oxideshop-ce/source/oxfunctions.php
         - ../../vendor/oxid-esales/oxideshop-ce/source/overridablefunctions.php

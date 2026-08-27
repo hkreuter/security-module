@@ -8,6 +8,7 @@ on:
         options:
           - 'module-security'
           - 'module-security-oxapi'
+          - 'module-security-oxapi-storefront'
         default: 'module-security-oxapi'
         description: 'Scenario (with or without OXAPI)'
       limit:
